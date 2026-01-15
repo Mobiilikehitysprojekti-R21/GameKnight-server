@@ -1,0 +1,65 @@
+flowchart LR
+
+0[".dependency-cruiser.js"]
+subgraph 1["application"]
+subgraph 2["boardgame"]
+3["FindBoardGame.ts"]
+end
+subgraph 4["user"]
+5["CreateUser.ts"]
+end
+end
+subgraph 6["domain"]
+7["User.ts"]
+K["BoardGame.ts"]
+end
+subgraph 8["composition"]
+9["boardGame.ts"]
+H["user.ts"]
+end
+subgraph A["infrastructure"]
+subgraph B["InMemory"]
+C["BoardGameRepository.ts"]
+I["UserRepository.ts"]
+end
+subgraph L["postgres"]
+M["UserRepository.ts"]
+end
+end
+D["fs"]
+E["path"]
+subgraph F["ports"]
+G["BoardGameRepository.ts"]
+J["UserRepository.ts"]
+end
+subgraph N["interfaces"]
+subgraph O["http"]
+subgraph P["controllers"]
+Q["createUserController.ts"]
+R["findBoardGameController.ts"]
+end
+subgraph S["routes"]
+T["boardgames.ts"]
+U["users.ts"]
+end
+V["server.ts"]
+end
+end
+W["server.ts"]
+5-->7
+9-->3
+9-->C
+C-->G
+C-->D
+C-->E
+H-->5
+H-->I
+I-->J
+M-->J
+T-->R
+U-->Q
+V-->T
+V-->U
+W-->9
+W-->H
+W-->V
