@@ -12,6 +12,6 @@ module.exports = function createUserUseCases() {
   return {
     createUser: new CreateUser(userRepo),
     validateNickname: new ValidateNickname(userRepo),
-    changeNickname: new ChangeNickname(userRepo),
+    updateNickname: new ChangeNickname(userRepo),
   };
 };
