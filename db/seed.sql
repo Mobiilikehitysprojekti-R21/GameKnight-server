@@ -16,10 +16,19 @@ INSERT INTO group_members (group_id, user_id) VALUES
 
 -- BOARD GAME
 INSERT INTO boardgames (
-  bgg_id, name, year_published, rank, bayes_average, average, users_rated
-) VALUES (
-  174430, 'Gloomhaven', 2017, 3, 8.50, 8.60, 60000
-);
+  bgg_id, name, year_published, rank, bayes_average, average, users_rated, is_expansion
+) VALUES
+(174430, 'Gloomhaven', 2017, 3, 8.50, 8.60, 60000, false),
+(68448, 'Pandemic Legacy: Season 1', 2015, 1, 8.64, 8.70, 50000, false),
+(13, 'Catan', 1995, 160, 7.21, 7.30, 95000, false),
+(161936, 'Terraforming Mars', 2016, 5, 8.37, 8.40, 45000, false),
+(169786, 'Scythe', 2016, 6, 8.31, 8.35, 42000, false),
+(9209, 'Carcassonne', 2000, 85, 7.22, 7.25, 80000, false),
+(28720, 'Dominion', 2008, 12, 8.02, 8.05, 65000, false),
+(1883, 'Ticket to Ride', 2004, 57, 7.50, 7.55, 75000, false),
+(12333, '7 Wonders', 2010, 18, 7.90, 7.95, 62000, false),
+(102794, 'Pandemic: On the Brink', 2009, 150, 7.15, 7.20, 40000, true);
+
 
 -- LOCATION
 INSERT INTO locations (name, latitude, longitude) VALUES

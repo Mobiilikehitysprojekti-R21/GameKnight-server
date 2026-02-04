@@ -9,7 +9,7 @@ export interface BoardGameRoutesDeps {
 export default function userRoutes({ findBoardGame }: BoardGameRoutesDeps): Router {
   const router = Router();
   
-  router.get("/", findBoardGameController(findBoardGame));
+  router.get("/findByName", findBoardGameController(findBoardGame));
 
   return router;
 }
