@@ -10,26 +10,44 @@ class PostgresBoardGameRepository extends BoardGameRepository {
     this.pool = pool;
   }
 
-    async search(query: string): Promise<BoardGame[] | undefined> {
+    async search(query: string): Promise<BoardGame[]> {
         const result = await this.pool.query(
             `SELECT *
             FROM boardgames
-            WHERE name ILIKE '%${query}%'`
+            WHERE name ILIKE $1`,
+            [`%${query}%`]
         )
 
         return result.rows.map(row => new BoardGame(
-            row.game_id,
+            
             row.bgg_id,
             row.name,
+            row.is_expansion,
+            row.game_id,
             row.year_published,
             row.rank,
             row.bayes_average,
             row.average,
             row.users_rated,
-            row.is_expansion
+            
         ));
     }
 
-    // async addGameToUser() {}
+    async addBoardGameToUser(userId: number, game: BoardGame["bgg_id"]): Promise<BoardGame["bgg_id"]> {
+
+        const result = await this.pool.query(
+            `INSERT INTO userBoardgames (user_id, bgg_id)
+            VALUES ($1, $2)
+            RETURNING user_id, bgg_id`,
+            [userId, game]
+        )
+
+        if (result.rows.length > 0) {
+            const row = result.rows[0]
+            return row.bgg_id
+        } else {
+            throw new Error("Failed to add new game to user´s collection")
+        }
+    }
 }
 export default PostgresBoardGameRepository
