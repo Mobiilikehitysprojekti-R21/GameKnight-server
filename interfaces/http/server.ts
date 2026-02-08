@@ -12,10 +12,12 @@ import GetFriendRequests from "../../application/friendships/GetFriendRequests";
 import AddFriend from "../../application/friendships/AddFriend";
 import AcceptRequest from "../../application/friendships/AcceptRequest";
 import InviteFriend from "../../application/friendships/InviteFriend";
+import ChangeNickname from "../../application/user/ChangeNickname";
 
 export interface HttpServerDeps {
   createUser: CreateUser;
   validateNickname: ValidateNickname
+  updateNickname: ChangeNickname
   findBoardGame: FindBoardGame;
   declineRequest: DeclineRequest;
   getFriends: GetFriends;

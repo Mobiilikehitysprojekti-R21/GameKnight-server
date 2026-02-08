@@ -31,6 +31,12 @@ CREATE TABLE boardgames (
   is_expansion BOOLEAN DEFAULT false
 );
 
+CREATE TABLE userBoardgames (
+  user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  bgg_id INT NOT NULL REFERENCES boardgames(bgg_id) ON DELETE CASCADE,
+  PRIMARY KEY (user_id, bgg_id)
+);
+
 CREATE TABLE groups (
   group_id SERIAL PRIMARY KEY,
   name VARCHAR(120) NOT NULL
