@@ -17,10 +17,12 @@ console.log("DATABASE_URL =", process.env.DATABASE_URL);
 
 const userUseCases = require("./composition/user")();
 const boardGameUseCases = require("./composition/boardGame")();
+const friendshipUseCases = require("./composition/friendships")();
 
 const app = createHttpServer({
   ...userUseCases,
   ...boardGameUseCases,
+  ...friendshipUseCases,
 });
 
 app.listen(3000, () => {

@@ -9,6 +9,8 @@ DROP TABLE IF EXISTS
   users
 CASCADE;
 
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 CREATE TABLE users (
   user_id SERIAL PRIMARY KEY,
   auth0_id TEXT UNIQUE NOT NULL,
@@ -86,3 +88,38 @@ CREATE INDEX idx_sessions_game
 
 CREATE INDEX idx_session_players_user
   ON session_players (user_id);
+
+ALTER TABLE friendships
+  ADD COLUMN created_at TIMESTAMP DEFAULT NOW();
+
+ALTER TABLE friendships
+  ADD CONSTRAINT friendships_status_check
+  CHECK (status IN ('pending', 'accepted'));
+
+ALTER TABLE friendships
+  ADD COLUMN request_id SERIAL;
+
+ALTER TABLE friendships
+  DROP CONSTRAINT friendships_pkey;
+
+ALTER TABLE friendships
+  ADD CONSTRAINT friendships_pkey PRIMARY KEY (request_id);
+
+ALTER TABLE friendships
+  ADD CONSTRAINT friendships_user_id_friend_id_key UNIQUE (user_id, friend_id);
+
+  CREATE TABLE IF NOT EXISTS invites (
+  invite_id SERIAL PRIMARY KEY,
+  invited_email VARCHAR(255) NOT NULL,
+  invited_by_user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  token UUID NOT NULL DEFAULT gen_random_uuid(),
+  status VARCHAR(20) NOT NULL DEFAULT 'sent',
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS invites_token_uq ON invites(token);
+
+CREATE INDEX IF NOT EXISTS idx_friendships_friend_pending
+ON friendships(friend_id, status);
+
+ALTER TABLE friendships ALTER COLUMN status SET DEFAULT 'pending';

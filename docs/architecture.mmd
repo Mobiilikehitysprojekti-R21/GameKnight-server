@@ -7,115 +7,152 @@ subgraph 2["boardgame"]
 4["FindBoardGame.ts"]
 5["GetUserGameCollection.ts"]
 end
-subgraph 6["user"]
-7["ChangeNickname.ts"]
-8["CreateUser.ts"]
-C["ValidateNickname.ts"]
+subgraph 6["friendships"]
+7["AcceptRequest.ts"]
+8["AddFriend.ts"]
+9["DeclineRequest.ts"]
+A["GetFriendRequests.ts"]
+B["GetFriends.ts"]
+C["InviteFriend.ts"]
+end
+subgraph D["user"]
+E["ChangeNickname.ts"]
+F["CreateUser.ts"]
+J["ValidateNickname.ts"]
 end
 end
-subgraph 9["domain"]
-A["User.ts"]
-M["BoardGame.ts"]
-T["Friendship.ts"]
-U["Group.ts"]
-V["Location.ts"]
-W["Session.ts"]
-X["SessionPlayer.ts"]
-Y["UserBoardGames.ts"]
+subgraph G["domain"]
+H["User.ts"]
+T["BoardGame.ts"]
+Z["Friendship.ts"]
+14["Group.ts"]
+15["Location.ts"]
+16["Session.ts"]
+17["SessionPlayer.ts"]
+18["UserBoardGames.ts"]
 end
-B["crypto"]
-subgraph D["composition"]
-E["boardGame.ts"]
-Q["user.ts"]
+I["crypto"]
+subgraph K["composition"]
+L["boardGame.ts"]
+X["friendships.ts"]
+11["user.ts"]
 end
-subgraph F[".."]
-subgraph G["application"]
-subgraph H["boardgame"]
-I["getUserGameCollection"]
-end
-end
-end
-subgraph J["infrastructure"]
-subgraph K["postgres"]
-L["BoardGameRepository.ts"]
-P["db.ts"]
-R["UserRepository.ts"]
-18["SessionPlayerRepository.ts"]
-19["SessionRepository.ts"]
-end
-subgraph Z["InMemory"]
-10["BoardGameRepository.ts"]
-13["SessionPlayerRepository.ts"]
-15["SessionRepository.ts"]
-17["UserRepository.ts"]
+subgraph M[".."]
+subgraph N["application"]
+subgraph O["boardgame"]
+P["getUserGameCollection"]
 end
 end
-subgraph N["ports"]
-O["BoardGameRepository.ts"]
-S["UserRepository.ts"]
-14["SessionPlayerRepository.ts"]
-16["SessionRepository.ts"]
 end
-11["fs"]
-12["path"]
-subgraph 1A["interfaces"]
-subgraph 1B["http"]
-subgraph 1C["controllers"]
-1D["addBoardGameToUserController.ts"]
-1E["createUserController.ts"]
-1F["findBoardGameController.ts"]
-1G["getUserGameCollectionController.ts"]
-1H["updateNicknameController.ts"]
-1I["validateNicknameController.ts"]
+subgraph Q["infrastructure"]
+subgraph R["postgres"]
+S["BoardGameRepository.ts"]
+W["db.ts"]
+Y["FriendRepository.ts"]
+12["UserRepository.ts"]
+1J["SessionPlayerRepository.ts"]
+1K["SessionRepository.ts"]
 end
-subgraph 1J["routes"]
-1K["boardgames.ts"]
-1L["users.ts"]
-end
-1M["server.ts"]
+subgraph 19["InMemory"]
+1A["BoardGameRepository.ts"]
+1D["FriendRepository.ts"]
+1E["SessionPlayerRepository.ts"]
+1G["SessionRepository.ts"]
+1I["UserRepository.ts"]
 end
 end
-1N["server.ts"]
-subgraph 1O["tests"]
-1P["dbTest.js"]
+subgraph U["ports"]
+V["BoardGameRepository.ts"]
+10["FriendRepository.ts"]
+13["UserRepository.ts"]
+1F["SessionPlayerRepository.ts"]
+1H["SessionRepository.ts"]
 end
-8-->A
-A-->B
-E-->3
-E-->4
-E-->I
-E-->L
-E-->P
-L-->M
-L-->O
-Q-->7
-Q-->8
-Q-->C
-Q-->P
-Q-->R
-R-->A
-R-->S
-10-->O
-10-->11
-10-->12
-13-->14
-15-->16
-17-->V
-17-->A
-17-->S
-18-->X
-18-->14
-19-->W
-19-->16
-1K-->1D
-1K-->1F
-1K-->1G
-1L-->1E
-1L-->1H
-1L-->1I
-1M-->1K
-1M-->1L
-1N-->E
-1N-->Q
-1N-->P
-1N-->1M
+1B["fs"]
+1C["path"]
+subgraph 1L["interfaces"]
+subgraph 1M["http"]
+subgraph 1N["controllers"]
+1O["acceptRequestController.ts"]
+1P["addBoardGameToUserController.ts"]
+1Q["addFriendController.ts"]
+1R["createUserController.ts"]
+1S["declineFriendRequestController.ts"]
+1T["findBoardGameController.ts"]
+1U["getFriendRequestsController.ts"]
+1V["getFriendsController.ts"]
+1W["getUserGameCollectionController.ts"]
+1X["inviteFriendController.ts"]
+1Y["updateNicknameController.ts"]
+1Z["validateNicknameController.ts"]
+end
+subgraph 20["routes"]
+21["boardgames.ts"]
+22["friendships.ts"]
+23["users.ts"]
+end
+24["server.ts"]
+end
+end
+25["server.ts"]
+subgraph 26["tests"]
+27["dbTest.js"]
+end
+F-->H
+H-->I
+L-->3
+L-->4
+L-->P
+L-->S
+L-->W
+S-->T
+S-->V
+X-->7
+X-->8
+X-->9
+X-->A
+X-->B
+X-->C
+X-->W
+X-->Y
+Y-->Z
+Y-->10
+11-->E
+11-->F
+11-->J
+11-->W
+11-->12
+12-->H
+12-->13
+1A-->V
+1A-->1B
+1A-->1C
+1E-->1F
+1G-->1H
+1I-->15
+1I-->H
+1I-->13
+1J-->17
+1J-->1F
+1K-->16
+1K-->1H
+21-->1P
+21-->1T
+21-->1W
+22-->1O
+22-->1Q
+22-->1S
+22-->1U
+22-->1V
+22-->1X
+23-->1R
+23-->1Y
+23-->1Z
+24-->21
+24-->22
+24-->23
+25-->L
+25-->X
+25-->11
+25-->W
+25-->24
