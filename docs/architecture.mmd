@@ -86,17 +86,20 @@ subgraph 1N["controllers"]
 1Y["updateNicknameController.ts"]
 1Z["validateNicknameController.ts"]
 end
-subgraph 20["routes"]
-21["boardgames.ts"]
-22["friendships.ts"]
-23["users.ts"]
+subgraph 20["middleware"]
+21["auth.ts"]
 end
-24["server.ts"]
+subgraph 22["routes"]
+23["boardgames.ts"]
+24["friendships.ts"]
+25["users.ts"]
+end
+26["server.ts"]
 end
 end
-25["server.ts"]
-subgraph 26["tests"]
-27["dbTest.js"]
+27["server.ts"]
+subgraph 28["tests"]
+29["dbTest.js"]
 end
 F-->H
 H-->I
@@ -136,23 +139,25 @@ Y-->10
 1J-->1F
 1K-->16
 1K-->1H
-21-->1P
-21-->1T
-21-->1W
-22-->1O
-22-->1Q
-22-->1S
-22-->1U
-22-->1V
-22-->1X
-23-->1R
-23-->1Y
-23-->1Z
-24-->21
-24-->22
-24-->23
-25-->L
-25-->X
-25-->11
-25-->W
-25-->24
+23-->1P
+23-->1T
+23-->1W
+23-->21
+24-->1O
+24-->1Q
+24-->1S
+24-->1U
+24-->1V
+24-->1X
+25-->1R
+25-->1Y
+25-->1Z
+25-->21
+26-->23
+26-->24
+26-->25
+27-->L
+27-->X
+27-->11
+27-->W
+27-->26
