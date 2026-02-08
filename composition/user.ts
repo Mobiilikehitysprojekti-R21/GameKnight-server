@@ -1,5 +1,6 @@
 import CreateUser from "../application/user/CreateUser";
 import ValidateNickname from "../application/user/ValidateNickname";
+import ChangeNickname from "../application/user/ChangeNickname"
 // import InMemoryUserRepository from "../infrastructure/InMemory/UserRepository";
 import postgresUserRepository from "../infrastructure/postgres/UserRepository";
 import { pool } from "../infrastructure/postgres/db";
@@ -10,6 +11,7 @@ module.exports = function createUserUseCases() {
 
   return {
     createUser: new CreateUser(userRepo),
-    validateNickname: new ValidateNickname(userRepo)
+    validateNickname: new ValidateNickname(userRepo),
+    updateNickname: new ChangeNickname(userRepo),
   };
 };

@@ -84,6 +84,29 @@ class PostgresUserRepository extends UserRepository {
     });
   }
 
+  async updateNickname(nickname: string, auth0_id: string): Promise<User> {
+
+    const result = await this.pool.query(
+      ` UPDATE users 
+        SET nickname = $1
+        WHERE auth0_id = $2
+        RETURNING user_id, auth0_id, email, nickname
+      `,
+      [nickname, auth0_id]
+    )
+    if (result.rows.length > 0) {
+      const row = result.rows[0]
+      return new User({
+        user_id: row.user_id,
+        email: row.email,
+        auth0_id: row.auth0_id,
+        nickname: row.nickname,
+      });
+    } else {
+      throw new Error("Failed to update nickname");
+    }
+  }
+
 }
 
 export default PostgresUserRepository;
