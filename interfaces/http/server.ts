@@ -16,8 +16,8 @@ import ChangeNickname from "../../application/user/ChangeNickname";
 
 export interface HttpServerDeps {
   createUser: CreateUser;
-  validateNickname: ValidateNickname
-  updateNickname: ChangeNickname
+  validateNickname: ValidateNickname;
+  updateNickname: ChangeNickname;
   findBoardGame: FindBoardGame;
   declineRequest: DeclineRequest;
   getFriends: GetFriends;
@@ -29,12 +29,18 @@ export interface HttpServerDeps {
 
 export default function createHttpServer(deps: HttpServerDeps): Express {
   const app = express();
+
   app.use(cors());
   app.use(express.json());
 
   app.use("/users", userRoutes(deps));
-  app.use("/boardgames", boardGameRouter(deps))
+
+  app.use("/boardgames", boardGameRouter(deps));
+  app.get("/", (req, res) => {
+    res.send("GameKnight API");
+  });
   app.use("/friendships", friendshipsRouter(deps))
+
 
   return app;
 }

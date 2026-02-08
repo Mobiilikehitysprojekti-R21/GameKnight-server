@@ -5,6 +5,7 @@ import addBoardGameToUserController from "../controllers/addBoardGameToUserContr
 import getUserGameCollectionController from "../controllers/getUserGameCollectionController";
 import AddBoardGameToUser from "../../../application/boardgame/AddBoardGameToUser";
 import GetUserGameCollection from "../../../application/boardgame/getUserGameCollection";
+import { requireAuth } from "../middleware/auth";
 
 export interface BoardGameRoutesDeps {
   findBoardGame: FindBoardgame;
@@ -15,7 +16,7 @@ export interface BoardGameRoutesDeps {
 export default function userRoutes({ findBoardGame, addGameToUser, getUserGameCollection }: BoardGameRoutesDeps): Router {
   const router = Router();
 
-  router.get("/findByName", findBoardGameController(findBoardGame));
+  router.get("/findByName", requireAuth, findBoardGameController(findBoardGame));
   router.get("/getUserGameCollection/:user_id", getUserGameCollectionController(getUserGameCollection))
   router.post("/addToUser", addBoardGameToUserController(addGameToUser))
 

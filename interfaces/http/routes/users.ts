@@ -4,6 +4,8 @@ import validateNicknameController from "../controllers/validateNicknameControlle
 import updateNicknameController from "../controllers/updateNicknameController";
 import CreateUser from "../../../application/user/CreateUser";
 import ValidateNickname from "../../../application/user/ValidateNickname";
+import validateNicknameController from "../controllers/validateNicknameController";
+import { requireAuth } from "../middleware/auth";
 import ChangeNickname from "../../../application/user/ChangeNickname";
 
 export interface UserRoutesDeps {
@@ -15,9 +17,10 @@ export interface UserRoutesDeps {
 export default function userRoutes({ createUser, validateNickname, updateNickname }: UserRoutesDeps): Router {
   const router = Router();
 
-  router.post("/", createUserController(createUser));
-  router.post("/validateNickname", validateNicknameController(validateNickname))
-  router.patch("/updateNickname", updateNicknameController(updateNickname))
+  // Protected routes - require valid JWT token
+  router.post("/", requireAuth, createUserController(createUser));
+  router.post("/validateNickname", requireAuth, validateNicknameController(validateNickname));
+  router.patch("/updateNickname", requireAuth, updateNicknameController(updateNickname))
 
   return router;
 }
