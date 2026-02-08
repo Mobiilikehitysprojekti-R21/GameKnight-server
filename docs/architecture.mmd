@@ -118,3 +118,93 @@ R-->S
 1N-->Q
 1N-->P
 1N-->1M
+subgraph 4["user"]
+5["CreateUser.ts"]
+9["ValidateNickname.ts"]
+end
+end
+subgraph 6["domain"]
+7["User.ts"]
+O["BoardGame.ts"]
+P["Friendship.ts"]
+Q["Group.ts"]
+R["Location.ts"]
+S["Session.ts"]
+T["SessionPlayer.ts"]
+end
+8["crypto"]
+subgraph A["composition"]
+B["boardGame.ts"]
+J["user.ts"]
+end
+subgraph C["infrastructure"]
+subgraph D["InMemory"]
+E["BoardGameRepository.ts"]
+U["SessionPlayerRepository.ts"]
+W["SessionRepository.ts"]
+Y["UserRepository.ts"]
+end
+subgraph K["postgres"]
+L["db.ts"]
+M["UserRepository.ts"]
+Z["SessionPlayerRepository.ts"]
+10["SessionRepository.ts"]
+end
+end
+F["fs"]
+G["path"]
+subgraph H["ports"]
+I["BoardGameRepository.ts"]
+N["UserRepository.ts"]
+V["SessionPlayerRepository.ts"]
+X["SessionRepository.ts"]
+end
+subgraph 11["interfaces"]
+subgraph 12["http"]
+subgraph 13["controllers"]
+14["createUserController.ts"]
+15["findBoardGameController.ts"]
+16["validateNicknameController.ts"]
+end
+subgraph 17["routes"]
+18["boardgames.ts"]
+19["users.ts"]
+end
+1A["server.ts"]
+end
+end
+1B["server.ts"]
+subgraph 1C["tests"]
+1D["dbTest.js"]
+end
+5-->7
+7-->8
+B-->3
+B-->E
+E-->I
+E-->F
+E-->G
+J-->5
+J-->9
+J-->L
+J-->M
+M-->7
+M-->N
+U-->V
+W-->X
+Y-->R
+Y-->7
+Y-->N
+Z-->T
+Z-->V
+10-->S
+10-->X
+18-->15
+19-->14
+19-->16
+1A-->18
+1A-->19
+1B-->B
+1B-->J
+1B-->L
+1B-->1A
