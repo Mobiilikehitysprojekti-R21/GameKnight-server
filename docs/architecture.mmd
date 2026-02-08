@@ -3,94 +3,156 @@ flowchart LR
 0[".dependency-cruiser.js"]
 subgraph 1["application"]
 subgraph 2["boardgame"]
-3["FindBoardGame.ts"]
+3["AddBoardGameToUser.ts"]
+4["FindBoardGame.ts"]
+5["GetUserGameCollection.ts"]
 end
-subgraph 4["user"]
-5["CreateUser.ts"]
-9["ValidateNickname.ts"]
+subgraph 6["friendships"]
+7["AcceptRequest.ts"]
+8["AddFriend.ts"]
+9["DeclineRequest.ts"]
+A["GetFriendRequests.ts"]
+B["GetFriends.ts"]
+C["InviteFriend.ts"]
 end
-end
-subgraph 6["domain"]
-7["User.ts"]
-O["BoardGame.ts"]
-P["Friendship.ts"]
-Q["Group.ts"]
-R["Location.ts"]
-S["Session.ts"]
-T["SessionPlayer.ts"]
-end
-8["crypto"]
-subgraph A["composition"]
-B["boardGame.ts"]
-J["user.ts"]
-end
-subgraph C["infrastructure"]
-subgraph D["InMemory"]
-E["BoardGameRepository.ts"]
-U["SessionPlayerRepository.ts"]
-W["SessionRepository.ts"]
-Y["UserRepository.ts"]
-end
-subgraph K["postgres"]
-L["db.ts"]
-M["UserRepository.ts"]
-Z["SessionPlayerRepository.ts"]
-10["SessionRepository.ts"]
+subgraph D["user"]
+E["ChangeNickname.ts"]
+F["CreateUser.ts"]
+J["ValidateNickname.ts"]
 end
 end
-F["fs"]
-G["path"]
-subgraph H["ports"]
-I["BoardGameRepository.ts"]
-N["UserRepository.ts"]
-V["SessionPlayerRepository.ts"]
-X["SessionRepository.ts"]
+subgraph G["domain"]
+H["User.ts"]
+T["BoardGame.ts"]
+Z["Friendship.ts"]
+14["Group.ts"]
+15["Location.ts"]
+16["Session.ts"]
+17["SessionPlayer.ts"]
+18["UserBoardGames.ts"]
 end
-subgraph 11["interfaces"]
-subgraph 12["http"]
-subgraph 13["controllers"]
-14["createUserController.ts"]
-15["findBoardGameController.ts"]
-16["validateNicknameController.ts"]
+I["crypto"]
+subgraph K["composition"]
+L["boardGame.ts"]
+X["friendships.ts"]
+11["user.ts"]
 end
-subgraph 17["routes"]
-18["boardgames.ts"]
-19["users.ts"]
-end
-1A["server.ts"]
+subgraph M[".."]
+subgraph N["application"]
+subgraph O["boardgame"]
+P["getUserGameCollection"]
 end
 end
-1B["server.ts"]
-subgraph 1C["tests"]
-1D["dbTest.js"]
 end
-5-->7
-7-->8
-B-->3
-B-->E
-E-->I
-E-->F
-E-->G
-J-->5
-J-->9
-J-->L
-J-->M
-M-->7
-M-->N
-U-->V
-W-->X
-Y-->7
-Y-->N
-Z-->T
-Z-->V
-10-->S
-10-->X
-18-->15
-19-->14
-19-->16
-1A-->18
-1A-->19
-1B-->B
-1B-->J
-1B-->L
-1B-->1A
+subgraph Q["infrastructure"]
+subgraph R["postgres"]
+S["BoardGameRepository.ts"]
+W["db.ts"]
+Y["FriendRepository.ts"]
+12["UserRepository.ts"]
+1J["SessionPlayerRepository.ts"]
+1K["SessionRepository.ts"]
+end
+subgraph 19["InMemory"]
+1A["BoardGameRepository.ts"]
+1D["FriendRepository.ts"]
+1E["SessionPlayerRepository.ts"]
+1G["SessionRepository.ts"]
+1I["UserRepository.ts"]
+end
+end
+subgraph U["ports"]
+V["BoardGameRepository.ts"]
+10["FriendRepository.ts"]
+13["UserRepository.ts"]
+1F["SessionPlayerRepository.ts"]
+1H["SessionRepository.ts"]
+end
+1B["fs"]
+1C["path"]
+subgraph 1L["interfaces"]
+subgraph 1M["http"]
+subgraph 1N["controllers"]
+1O["acceptRequestController.ts"]
+1P["addBoardGameToUserController.ts"]
+1Q["addFriendController.ts"]
+1R["createUserController.ts"]
+1S["declineFriendRequestController.ts"]
+1T["findBoardGameController.ts"]
+1U["getFriendRequestsController.ts"]
+1V["getFriendsController.ts"]
+1W["getUserGameCollectionController.ts"]
+1X["inviteFriendController.ts"]
+1Y["updateNicknameController.ts"]
+1Z["validateNicknameController.ts"]
+end
+subgraph 20["routes"]
+21["boardgames.ts"]
+22["friendships.ts"]
+23["users.ts"]
+end
+24["server.ts"]
+end
+end
+25["server.ts"]
+subgraph 26["tests"]
+27["dbTest.js"]
+end
+F-->H
+H-->I
+L-->3
+L-->4
+L-->P
+L-->S
+L-->W
+S-->T
+S-->V
+X-->7
+X-->8
+X-->9
+X-->A
+X-->B
+X-->C
+X-->W
+X-->Y
+Y-->Z
+Y-->10
+11-->E
+11-->F
+11-->J
+11-->W
+11-->12
+12-->H
+12-->13
+1A-->V
+1A-->1B
+1A-->1C
+1E-->1F
+1G-->1H
+1I-->15
+1I-->H
+1I-->13
+1J-->17
+1J-->1F
+1K-->16
+1K-->1H
+21-->1P
+21-->1T
+21-->1W
+22-->1O
+22-->1Q
+22-->1S
+22-->1U
+22-->1V
+22-->1X
+23-->1R
+23-->1Y
+23-->1Z
+24-->21
+24-->22
+24-->23
+25-->L
+25-->X
+25-->11
+25-->W
+25-->24
