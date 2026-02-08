@@ -1,9 +1,9 @@
 import Session from "../domain/Session";
 
 abstract class SessionRepository {
-  abstract save(session: Session): Promise<void>;
-  abstract findByID(sessionID: number): Promise<Session | undefined>;
   abstract findByGroupID(groupID: number): Promise<Session[]>;
+  abstract getSessions(): Promise<Session[]>;
+  abstract addSession(session: Session): Promise<void>;
 }
 
 export default SessionRepository;

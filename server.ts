@@ -18,11 +18,15 @@ console.log("DATABASE_URL =", process.env.DATABASE_URL);
 const userUseCases = require("./composition/user")();
 const boardGameUseCases = require("./composition/boardGame")();
 const friendshipUseCases = require("./composition/friendships")();
+const sessionUseCases = require("./composition/sessions")();
+const sessionPlayerUseCases = require("./composition/sessionPlayer")(); 
 
 const app = createHttpServer({
   ...userUseCases,
   ...boardGameUseCases,
   ...friendshipUseCases,
+  ...sessionUseCases,
+  ...sessionPlayerUseCases,
 });
 
 app.listen(3000, () => {
