@@ -13,6 +13,8 @@ import AddFriend from "../../application/friendships/AddFriend";
 import AcceptRequest from "../../application/friendships/AcceptRequest";
 import InviteFriend from "../../application/friendships/InviteFriend";
 import ChangeNickname from "../../application/user/ChangeNickname";
+import AddBoardGameToUser from "../../application/boardgame/AddBoardGameToUser";
+import GetUserGameCollection from "../../application/boardgame/GetUserGameCollection";
 
 export interface HttpServerDeps {
   createUser: CreateUser;
@@ -25,6 +27,9 @@ export interface HttpServerDeps {
   addFriend: AddFriend;
   acceptRequest: AcceptRequest;
   inviteFriend: InviteFriend;
+  addGameToUser: AddBoardGameToUser
+  getUserGameCollection: GetUserGameCollection
+
 }
 
 export default function createHttpServer(deps: HttpServerDeps): Express {
