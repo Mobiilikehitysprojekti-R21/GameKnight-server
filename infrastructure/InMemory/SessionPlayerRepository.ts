@@ -4,7 +4,7 @@ import SessionPlayer from "../../domain/SessionPlayer";
 class InMemorySessionPlayerRepository extends SessionPlayerRepository {
   private readonly sessionPlayers: SessionPlayer[] = [];
 
-  async save(sessionPlayer: SessionPlayer): Promise<void> {
+  async saveSessionPlayer(sessionPlayer: SessionPlayer): Promise<void> {
     this.sessionPlayers.push(sessionPlayer);
   }
 

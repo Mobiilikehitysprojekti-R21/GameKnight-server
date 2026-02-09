@@ -12,6 +12,11 @@ import GetFriendRequests from "../../application/friendships/GetFriendRequests";
 import AddFriend from "../../application/friendships/AddFriend";
 import AcceptRequest from "../../application/friendships/AcceptRequest";
 import InviteFriend from "../../application/friendships/InviteFriend";
+import sessionsRouter from "./routes/sessions";
+import sessionPlayerRouter from "./routes/sessionPlayers";
+import sessions from "../../application/session/getSessions";
+import addSession from "../../application/session/addSession";
+import sessionPlayers from "../../application/sessionPlayer/saveSessionPlayer";
 import ChangeNickname from "../../application/user/ChangeNickname";
 
 export interface HttpServerDeps {
@@ -25,7 +30,10 @@ export interface HttpServerDeps {
   addFriend: AddFriend;
   acceptRequest: AcceptRequest;
   inviteFriend: InviteFriend;
-}
+  getSessions: sessions;
+  addSession: addSession;
+  saveSessionPlayer: sessionPlayers;
+} 
 
 export default function createHttpServer(deps: HttpServerDeps): Express {
   const app = express();
@@ -40,6 +48,8 @@ export default function createHttpServer(deps: HttpServerDeps): Express {
     res.send("GameKnight API");
   });
   app.use("/friendships", friendshipsRouter(deps))
+  app.use("/sessions", sessionsRouter(deps));
+  app.use("/sessionPlayers", sessionPlayerRouter(deps));
 
 
   return app;
