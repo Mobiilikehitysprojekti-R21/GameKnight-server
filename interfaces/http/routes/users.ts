@@ -4,7 +4,6 @@ import validateNicknameController from "../controllers/validateNicknameControlle
 import updateNicknameController from "../controllers/updateNicknameController";
 import CreateUser from "../../../application/user/CreateUser";
 import ValidateNickname from "../../../application/user/ValidateNickname";
-import validateNicknameController from "../controllers/validateNicknameController";
 import { requireAuth } from "../middleware/auth";
 import ChangeNickname from "../../../application/user/ChangeNickname";
 
