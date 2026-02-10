@@ -18,7 +18,7 @@ console.log("DATABASE_URL =", process.env.DATABASE_URL);
 const userUseCases = require("./composition/user")();
 const boardGameUseCases = require("./composition/boardGame")();
 const friendshipUseCases = require("./composition/friendships")();
-const sessionUseCases = require("./composition/sessions")();
+const sessionUseCases = require("./composition/session")();
 const sessionPlayerUseCases = require("./composition/sessionPlayer")(); 
 
 const app = createHttpServer({
