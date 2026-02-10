@@ -14,12 +14,12 @@ import AcceptRequest from "../../application/friendships/AcceptRequest";
 import InviteFriend from "../../application/friendships/InviteFriend";
 import sessionsRouter from "./routes/sessions";
 import sessionPlayerRouter from "./routes/sessionPlayers";
-import sessions from "../../application/session/getSessions";
 import addSession from "../../application/session/addSession";
 import sessionPlayers from "../../application/sessionPlayer/saveSessionPlayer";
 import ChangeNickname from "../../application/user/ChangeNickname";
 import AddBoardGameToUser from "../../application/boardgame/AddBoardGameToUser";
 import GetUserGameCollection from "../../application/boardgame/GetUserGameCollection";
+import getSessions from "../../application/session/getSessions";
 
 export interface HttpServerDeps {
   createUser: CreateUser;
@@ -34,7 +34,7 @@ export interface HttpServerDeps {
   inviteFriend: InviteFriend;
   addGameToUser: AddBoardGameToUser
   getUserGameCollection: GetUserGameCollection
-  getSessions: sessions;
+  getSessions: getSessions;
   addSession: addSession;
   saveSessionPlayer: sessionPlayers;
 } 
