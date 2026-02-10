@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS
   group_members,
   groups,
   locations,
+  userBoardgames,
   boardgames,
   users
 CASCADE;

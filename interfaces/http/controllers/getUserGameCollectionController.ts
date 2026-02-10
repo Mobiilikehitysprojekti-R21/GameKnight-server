@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import GetUserGameCollection from "../../../application/boardgame/getUserGameCollection";
+import GetUserGameCollection from "../../../application/boardgame/GetUserGameCollection";
 
 export default (getUserGameCollection: GetUserGameCollection) => 
   async (req: Request, res: Response): Promise<void> => {

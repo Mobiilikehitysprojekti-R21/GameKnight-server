@@ -18,6 +18,8 @@ import sessions from "../../application/session/getSessions";
 import addSession from "../../application/session/addSession";
 import sessionPlayers from "../../application/sessionPlayer/saveSessionPlayer";
 import ChangeNickname from "../../application/user/ChangeNickname";
+import AddBoardGameToUser from "../../application/boardgame/AddBoardGameToUser";
+import GetUserGameCollection from "../../application/boardgame/GetUserGameCollection";
 
 export interface HttpServerDeps {
   createUser: CreateUser;
@@ -30,6 +32,8 @@ export interface HttpServerDeps {
   addFriend: AddFriend;
   acceptRequest: AcceptRequest;
   inviteFriend: InviteFriend;
+  addGameToUser: AddBoardGameToUser
+  getUserGameCollection: GetUserGameCollection
   getSessions: sessions;
   addSession: addSession;
   saveSessionPlayer: sessionPlayers;
