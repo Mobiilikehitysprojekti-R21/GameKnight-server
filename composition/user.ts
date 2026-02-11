@@ -4,6 +4,7 @@ import ChangeNickname from "../application/user/ChangeNickname"
 // import InMemoryUserRepository from "../infrastructure/InMemory/UserRepository";
 import postgresUserRepository from "../infrastructure/postgres/UserRepository";
 import { pool } from "../infrastructure/postgres/db";
+import DeleteUser from "../application/user/DeleteUser";
 
 module.exports = function createUserUseCases() {
   // const userRepo = new InMemoryUserRepository();
@@ -13,5 +14,6 @@ module.exports = function createUserUseCases() {
     createUser: new CreateUser(userRepo),
     validateNickname: new ValidateNickname(userRepo),
     updateNickname: new ChangeNickname(userRepo),
+    deleteUser: new DeleteUser(userRepo)
   };
 };

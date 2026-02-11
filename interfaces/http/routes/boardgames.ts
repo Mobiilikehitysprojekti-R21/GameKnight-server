@@ -4,7 +4,7 @@ import findBoardGameController from "../controllers/findBoardGameController";
 import addBoardGameToUserController from "../controllers/addBoardGameToUserController";
 import getUserGameCollectionController from "../controllers/getUserGameCollectionController";
 import AddBoardGameToUser from "../../../application/boardgame/AddBoardGameToUser";
-import GetUserGameCollection from "../../../application/boardgame/getUserGameCollection";
+import GetUserGameCollection from "../../../application/boardgame/GetUserGameCollection";
 import { requireAuth } from "../middleware/auth";
 
 export interface BoardGameRoutesDeps {

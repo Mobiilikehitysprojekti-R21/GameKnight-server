@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import cors from "cors";
 import userRoutes from "./routes/users";
 import CreateUser from "../../application/user/CreateUser";
+import DeleteUser from "../../application/user/DeleteUser";
 import FindBoardGame from "../../application/boardgame/FindBoardGame";
 import boardGameRouter from "./routes/boardgames";
 import friendshipsRouter from "./routes/friendships";
@@ -37,6 +38,7 @@ export interface HttpServerDeps {
   getSessions: getSessions;
   addSession: addSession;
   saveSessionPlayer: sessionPlayers;
+  deleteUser: DeleteUser
 } 
 
 export default function createHttpServer(deps: HttpServerDeps): Express {
