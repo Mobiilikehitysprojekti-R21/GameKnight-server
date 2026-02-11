@@ -13,6 +13,7 @@ import AddFriend from "../../application/friendships/AddFriend";
 import AcceptRequest from "../../application/friendships/AcceptRequest";
 import InviteFriend from "../../application/friendships/InviteFriend";
 import ChangeNickname from "../../application/user/ChangeNickname";
+import sessionRoutes from "./routes/sessions";
 
 export interface HttpServerDeps {
   createUser: CreateUser;
@@ -41,6 +42,7 @@ export default function createHttpServer(deps: HttpServerDeps): Express {
   });
   app.use("/friendships", friendshipsRouter(deps))
 
+  app.use("/sessions", sessionRoutes);
 
   return app;
 }
