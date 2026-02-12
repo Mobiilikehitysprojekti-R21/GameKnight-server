@@ -75,12 +75,12 @@ class PostgresBoardGameRepository extends BoardGameRepository {
     }
 
     // Delete BoardGame from user´s collection
-    async deleteBoardGame(bgg_id: number) {
+    async deleteBoardGame(bgg_id: number, auth0_id: string) {
         try {
             await this.pool.query(
                 `DELETE FROM userBoardgames
-                 WHERE bgg_id = $1`,
-                [bgg_id]
+                 WHERE bgg_id = $1 AND auth0_id = $2`,
+                [bgg_id, auth0_id]
             )
         } catch (e: any) {
             throw new Error("Failed to delete game from collection");

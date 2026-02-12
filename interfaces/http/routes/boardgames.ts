@@ -22,7 +22,7 @@ export default function userRoutes({ findBoardGame, addGameToUser, getUserGameCo
   router.get("/findByName", requireAuth, findBoardGameController(findBoardGame));
   router.get("/getUserGameCollection/:user_id", getUserGameCollectionController(getUserGameCollection))
   router.post("/addToUser", addBoardGameToUserController(addGameToUser))
-  router.delete("/:bgg_id", deleteBoardGameController(deleteBoardGame))
+  router.delete("/:auth0_id/:bgg_id", deleteBoardGameController(deleteBoardGame))
 
   return router;
 }

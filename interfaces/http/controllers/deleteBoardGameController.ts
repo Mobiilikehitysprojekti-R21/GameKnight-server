@@ -7,12 +7,15 @@ export default (deleteBoardGame: DeleteBoardGame) =>
             const raw = req.params.bgg_id
             const bgg_id = parseInt(Array.isArray(raw) ? raw[0] : raw, 10)
 
+            const idraw = req.params.auth0_id
+            const auth0_id = String(Array.isArray(idraw) ? idraw[0] : idraw)
+
             if (!bgg_id) {
                 res.status(400).json({ error: "Missing bgg_id parameter" });
                 return
             }
 
-            const input: DeleteBoardGameInput = { bgg_id }
+            const input: DeleteBoardGameInput = { bgg_id, auth0_id }
 
             await deleteBoardGame.execute(input)
             res.status(200).json({ message: "Game deleted from collection" })
