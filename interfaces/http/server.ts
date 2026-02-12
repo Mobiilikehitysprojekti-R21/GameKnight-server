@@ -17,6 +17,7 @@ import sessionPlayerRouter from "./routes/sessionPlayers";
 import addSession from "../../application/session/addSession";
 import sessionPlayers from "../../application/sessionPlayer/saveSessionPlayer";
 import ChangeNickname from "../../application/user/ChangeNickname";
+import sessionRoutes from "./routes/sessions";
 import AddBoardGameToUser from "../../application/boardgame/AddBoardGameToUser";
 import GetUserGameCollection from "../../application/boardgame/GetUserGameCollection";
 import getSessions from "../../application/session/getSessions";
@@ -55,6 +56,7 @@ export default function createHttpServer(deps: HttpServerDeps): Express {
   app.use("/sessions", sessionsRouter(deps));
   app.use("/sessionPlayers", sessionPlayerRouter(deps));
 
+  app.use("/sessions", sessionRoutes);
 
   return app;
 }

@@ -19,6 +19,23 @@ class InMemoryUserRepository extends UserRepository {
     return userWithId;
   }
 
+  async updateNickname(nickname: string, auth0_id: string): Promise<User> {
+    const user = this.users.find(u => u.auth0_id === auth0_id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const updatedUser = new User({
+      ...user,
+      nickname
+    });
+
+    const index = this.users.findIndex(u => u.auth0_id === auth0_id);
+    this.users[index] = updatedUser;
+
+    return updatedUser;
+  }
+
   async findByEmail(email: string): Promise<User | undefined> {
     return this.users.find((u) => u.email === email);
   }
