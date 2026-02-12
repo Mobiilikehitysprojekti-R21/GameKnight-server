@@ -3,7 +3,7 @@ import BoardGameRepository from "../../ports/BoardGameRepository";
 
 export interface AddBoardGameInput {
     game: BoardGame["bgg_id"]
-    userId: number 
+    userId: string 
 }
 
 class AddBoardGameToUser {

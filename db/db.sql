@@ -33,9 +33,9 @@ CREATE TABLE boardgames (
 );
 
 CREATE TABLE userBoardgames (
-  user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  auth0_id TEXT NOT NULL REFERENCES users(auth0_id) ON DELETE CASCADE,
   bgg_id INT NOT NULL REFERENCES boardgames(bgg_id) ON DELETE CASCADE,
-  PRIMARY KEY (user_id, bgg_id)
+  PRIMARY KEY (auth0_id, bgg_id)
 );
 
 CREATE TABLE groups (
