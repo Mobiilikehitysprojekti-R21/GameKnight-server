@@ -4,9 +4,11 @@ import SessionRepository from "../../ports/SessionRepository";
 import { LocationRepository } from "../../ports/LocationRepository";
 
 interface CreateSessionInput {
-  groupId: number;
-  boardGameId: number;
-  playedAt: Date;
+  session_id: number;
+  group_id?: number | null;
+  user_id?: number | null;
+  game_id: number;
+  played_at: Date;
   location?: {
     name: string;
   };
@@ -17,7 +19,7 @@ export class CreateSession {
   constructor(
     private readonly sessionRepository: SessionRepository,
     private readonly locationRepository: LocationRepository
-  ) {}
+  ) { }
 
   async execute(input: CreateSessionInput): Promise<Session> {
     let locationId: number | undefined;
@@ -31,15 +33,17 @@ export class CreateSession {
 
     const session = new Session({
       session_id: 0, // repo asettaa
-      group_id: input.groupId,
-      game_id: input.boardGameId,
-      played_at: input.playedAt,
+      group_id: input.group_id,
+      game_id: input.game_id,
+      played_at: input.played_at,
       location_id: locationId,
       notes: input.notes
     });
 
-    await this.sessionRepository.save(session);
+    await this.sessionRepository.updateSession(session);
 
     return session;
   }
 }
+
+export default CreateSession;
