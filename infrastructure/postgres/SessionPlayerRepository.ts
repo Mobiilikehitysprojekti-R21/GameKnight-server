@@ -10,7 +10,7 @@ class PostgresSessionPlayerRepository extends SessionPlayerRepository {
     this.pool = pool;
   }
 
-  async save(sessionPlayer: SessionPlayer): Promise<void> {
+  async saveSessionPlayer(sessionPlayer: SessionPlayer): Promise<void> {
     await this.pool.query(
       `INSERT INTO session_players (session_id, user_id, score, is_winner)
        VALUES ($1, $2, $3, $4)`,

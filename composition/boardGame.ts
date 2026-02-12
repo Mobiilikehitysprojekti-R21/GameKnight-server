@@ -3,7 +3,7 @@ import BoardGameRepository from "../infrastructure/InMemory/BoardGameRepository"
 import { pool } from "../infrastructure/postgres/db";
 import PostgresBoardGameRepository from "../infrastructure/postgres/BoardGameRepository";
 import AddBoardGameToUser from "../application/boardgame/AddBoardGameToUser";
-import GetUserGameCollection from "../application/boardgame/getUserGameCollection";
+import GetUserGameCollection from "../application/boardgame/GetUserGameCollection";
 
 
 module.exports = function createBoardGameUseCases() {
