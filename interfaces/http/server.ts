@@ -21,6 +21,7 @@ import ChangeNickname from "../../application/user/ChangeNickname";
 import AddBoardGameToUser from "../../application/boardgame/AddBoardGameToUser";
 import GetUserGameCollection from "../../application/boardgame/GetUserGameCollection";
 import getSessions from "../../application/session/getSessions";
+import DeleteBoardGame from "../../application/boardgame/DeleteBoardGame";
 
 export interface HttpServerDeps {
   createUser: CreateUser;
@@ -39,6 +40,7 @@ export interface HttpServerDeps {
   addSession: addSession;
   saveSessionPlayer: sessionPlayers;
   deleteUser: DeleteUser
+  deleteBoardGame: DeleteBoardGame
 } 
 
 export default function createHttpServer(deps: HttpServerDeps): Express {
