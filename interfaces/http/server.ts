@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import cors from "cors";
 import userRoutes from "./routes/users";
 import CreateUser from "../../application/user/CreateUser";
+import DeleteUser from "../../application/user/DeleteUser";
 import FindBoardGame from "../../application/boardgame/FindBoardGame";
 import boardGameRouter from "./routes/boardgames";
 import friendshipsRouter from "./routes/friendships";
@@ -19,6 +20,7 @@ import ChangeNickname from "../../application/user/ChangeNickname";
 import AddBoardGameToUser from "../../application/boardgame/AddBoardGameToUser";
 import GetUserGameCollection from "../../application/boardgame/GetUserGameCollection";
 import getSessions from "../../application/session/getSessions";
+import DeleteBoardGame from "../../application/boardgame/DeleteBoardGame";
 import UpdateSession from "../../application/session/updateSession";
 import AddLocationToSession from "../../application/session/AddLocationToSession";
 import CreateSession from "../../application/session/CreateSession";
@@ -38,6 +40,8 @@ export interface HttpServerDeps {
   getUserGameCollection: GetUserGameCollection
   getSessions: getSessions;
   saveSessionPlayer: sessionPlayers;
+  deleteUser: DeleteUser
+  deleteBoardGame: DeleteBoardGame
   updateSession: UpdateSession;
   addLocationToSession: AddLocationToSession;
   createSession: CreateSession;

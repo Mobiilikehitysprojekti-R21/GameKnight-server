@@ -48,10 +48,10 @@ class PostgresUserRepository extends UserRepository {
     });
   }
 
-  async findById(user_id: string): Promise<User | undefined> {
+  async findById(auth0_id: string): Promise<User | undefined> {
     const result = await this.pool.query(
-      `SELECT * FROM users WHERE user_id = $1`,
-      [user_id]
+      `SELECT * FROM users WHERE auth0_id = $1`,
+      [auth0_id]
     );
 
     if (result.rowCount === 0) return undefined;
@@ -105,6 +105,22 @@ class PostgresUserRepository extends UserRepository {
     } else {
       throw new Error("Failed to update nickname");
     }
+  }
+
+  async deleteUser(auth0_id: string): Promise<void> {
+
+    try {
+      await this.pool.query(
+      ` DELETE FROM users 
+        WHERE auth0_id = $1
+      `,
+      [auth0_id]
+    )
+
+    } catch (e: any) {
+      throw new Error("Failed to delete user");
+    }
+    
   }
 
 }
