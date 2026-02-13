@@ -3,9 +3,12 @@ import { AddLocationToSession } from "../application/session/AddLocationToSessio
 
 import SessionRepository from "../infrastructure/postgres/SessionRepository";
 import LocationRepository from "../infrastructure/postgres/LocationRepository";
+import { pool } from "../infrastructure/postgres/db";
 
-const sessionRepository = new SessionRepository();
-const locationRepository = new LocationRepository();
+
+const sessionRepository = new SessionRepository(pool);
+const locationRepository = new LocationRepository(pool);
+
 
 export const sessionComposition = {
   createSession: new CreateSession(sessionRepository, locationRepository),
