@@ -1,11 +1,15 @@
 import { CreateSession } from "../application/session/CreateSession";
 import { AddLocationToSession } from "../application/session/AddLocationToSession";
+import PostgresLocationRepository from "../infrastructure/postgres/LocationRepository";
+import getSessions from "../application/session/getSessions";
+import findByGroupID from "../application/session/findByGroupID";
+import InMemorySessionRepository from "../infrastructure/InMemory/SessionRepository";
+import PostgresSessionRepository from "../infrastructure/postgres/SessionRepository";
+import { pool } from "../infrastructure/postgres/db";
+import UpdateSession from "../application/session/updateSession";
 
-import SessionRepository from "../infrastructure/postgres/SessionRepository";
-import LocationRepository from "../infrastructure/postgres/LocationRepository";
-
-const sessionRepository = new SessionRepository();
-const locationRepository = new LocationRepository();
+const sessionRepository = new InMemorySessionRepository();
+const locationRepository = new PostgresLocationRepository(pool);
 
 export const sessionComposition = {
   createSession: new CreateSession(sessionRepository, locationRepository),
@@ -14,20 +18,17 @@ export const sessionComposition = {
     locationRepository
   )
 };
-import getSessions from "../application/session/getSessions";
-import findByGroupID from "../application/session/findByGroupID";
-import addSession from "../application/session/addSession";
-// import InMemorySessionRepository from "../infrastructure/InMemory/SessionRepository";
-import PostgresSessionRepository from "../infrastructure/postgres/SessionRepository";
-import { pool } from "../infrastructure/postgres/db";
 
-module.exports = function createSessionUseCases() {
- //  const sessionRepo = new InMemorySessionRepository();
+const createSessionUseCases = function () {
    const sessionRepo = new PostgresSessionRepository(pool);
 
   return {
-    addSession: new addSession(sessionRepo),
     findByGroupID: new findByGroupID(sessionRepo),
     getSessions: new getSessions(sessionRepo),
+    UpdateSession: new UpdateSession(sessionRepo),
+    CreateSession: new CreateSession(sessionRepo, locationRepository),
+    AddLocationToSession: new AddLocationToSession(sessionRepo, locationRepository),
   };
-};
+}; 
+
+export default createSessionUseCases;

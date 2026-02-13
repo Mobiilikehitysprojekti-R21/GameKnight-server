@@ -26,23 +26,54 @@ class PostgresSessionRepository extends SessionRepository {
     }));
   }
 
-getSessions(): Promise<Session[]> {
-    return this.pool.query(`SELECT * FROM sessions`)
-      .then(result => result.rows.map(row => new Session({
-        session_id: row.session_id,
-        group_id: row.group_id,
-        game_id: row.game_id,
-        played_at: row.played_at,
-        location_id: row.location_id,
-        notes: row.notes
-      })));
+  async getSessions(): Promise<Session[]> {
+    const result = await this.pool.query(`SELECT * FROM sessions`);
+    return result.rows.map(row => new Session({
+      session_id: row.session_id,
+      group_id: row.group_id,
+      game_id: row.game_id,
+      played_at: row.played_at,
+      location_id: row.location_id,
+      notes: row.notes
+    }));
   }
 
-  async addSession(session: Session): Promise<void> {
+  async findByID(sessionID: number): Promise<Session | undefined> {
+    const result = await this.pool.query(
+      `SELECT * FROM sessions WHERE session_id = $1`,
+      [sessionID]
+    );
+
+    if (result.rowCount === 0) return undefined
+
+    const row = result.rows[0]
+    return new Session({
+      session_id: row.session_id,
+      group_id: row.group_id,
+      game_id: row.game_id,
+      played_at: row.played_at,
+      location_id: row.location_id,
+      notes: row.notes
+    });
+  }
+
+  async updateSession(session: Session): Promise<void> {
     await this.pool.query(
-      `INSERT INTO sessions (group_id, game_id, played_at, location_id, notes)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [session.group_id, session.game_id, session.played_at, session.location_id || null, session.notes || null]
+      `UPDATE sessions SET
+        group_id = $1,
+        game_id = $2,
+        played_at = $3,
+        location_id = $4,
+        notes = $5
+      WHERE session_id = $6`,
+      [
+        session.group_id,
+        session.game_id,
+        session.played_at,
+        session.location_id || null,
+        session.notes || null,
+        session.session_id
+      ]
     );
   }
 }

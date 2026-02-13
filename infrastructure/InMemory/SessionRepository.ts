@@ -12,8 +12,13 @@ class InMemorySessionRepository extends SessionRepository {
     return this.sessions;
   }
 
-  async addSession(session: Session): Promise<void> {
-    this.sessions.push(session);
+  async updateSession(session: Session): Promise<void> {
+    const index = this.sessions.findIndex(s => s.session_id === session.session_id);
+    if (index !== -1) {
+      this.sessions[index] = session;
+    } else {
+      throw new Error("Session not found");
+    }
   }
 }
 
