@@ -18,7 +18,7 @@ import sessionPlayers from "../../application/sessionPlayer/saveSessionPlayer";
 import ChangeNickname from "../../application/user/ChangeNickname";
 import AddBoardGameToUser from "../../application/boardgame/AddBoardGameToUser";
 import GetUserGameCollection from "../../application/boardgame/GetUserGameCollection";
-import getSessions from "../../application/session/getSessions";
+import getSessions from "../../application/session/GetGameSessions";
 import UpdateSession from "../../application/session/updateSession";
 import AddLocationToSession from "../../application/session/AddLocationToSession";
 import CreateSession from "../../application/session/CreateSession";
