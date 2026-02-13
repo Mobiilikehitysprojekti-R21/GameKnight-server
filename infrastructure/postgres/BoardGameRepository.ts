@@ -73,5 +73,20 @@ class PostgresBoardGameRepository extends BoardGameRepository {
         ));
 
     }
+
+    // Delete BoardGame from user´s collection
+    async deleteBoardGame(bgg_id: number) {
+        try {
+            await this.pool.query(
+                `DELETE FROM userBoardgames
+                 WHERE bgg_id = $1`,
+                [bgg_id]
+            )
+        } catch (e: any) {
+            throw new Error("Failed to delete game from collection");
+        }
+    }
+
+
 }
 export default PostgresBoardGameRepository

@@ -6,7 +6,7 @@ export default (createUser: CreateUser) =>
     try {
       // Extract auth0_id from the verified JWT token
       const auth0_id = (req as any).auth?.sub;
-      
+
       if (!auth0_id) {
         res.status(401).json({ error: "Unauthorized: missing user identity" });
         return;
@@ -18,7 +18,12 @@ export default (createUser: CreateUser) =>
       });
       res.status(201).json(user);
     } catch (e) {
-      const error = e as Error;
-      res.status(400).json({ error: error.message });
+      const error = e as any;
+      const statusCode = error.statusCode || 400;
+      res.status(statusCode).json({
+        statusCode,
+        error: statusCode === 409 ? "Conflict" : "Bad Request",
+        message: error.message,
+      });
     }
   };

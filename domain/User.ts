@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto' // testauksen vuoksi, voi poistaa kun Auth0 
 
 export interface UserProps {
   user_id?: number | null;
-  auth0_id?: string;  // valinnainen, että voi testata ennen Auth0 käyttöönottoa
+  auth0_id: string;
   email: string;
   nickname: string;
 }
@@ -19,7 +19,7 @@ class User {
     }
 
     this.user_id = user_id ?? null;
-    this.auth0_id = auth0_id ?? randomUUID();  // ATTE? testauksen vuoksi
+    this.auth0_id = auth0_id;
     this.email = email;
     this.nickname = nickname;
   }
