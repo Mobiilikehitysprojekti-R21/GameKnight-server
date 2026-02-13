@@ -15,13 +15,15 @@ import AcceptRequest from "../../application/friendships/AcceptRequest";
 import InviteFriend from "../../application/friendships/InviteFriend";
 import sessionsRouter from "./routes/sessions";
 import sessionPlayerRouter from "./routes/sessionPlayers";
-import addSession from "../../application/session/addSession";
 import sessionPlayers from "../../application/sessionPlayer/saveSessionPlayer";
 import ChangeNickname from "../../application/user/ChangeNickname";
 import AddBoardGameToUser from "../../application/boardgame/AddBoardGameToUser";
 import GetUserGameCollection from "../../application/boardgame/GetUserGameCollection";
 import getSessions from "../../application/session/getSessions";
 import DeleteBoardGame from "../../application/boardgame/DeleteBoardGame";
+import UpdateSession from "../../application/session/updateSession";
+import AddLocationToSession from "../../application/session/AddLocationToSession";
+import CreateSession from "../../application/session/CreateSession";
 
 export interface HttpServerDeps {
   createUser: CreateUser;
@@ -37,10 +39,12 @@ export interface HttpServerDeps {
   addGameToUser: AddBoardGameToUser
   getUserGameCollection: GetUserGameCollection
   getSessions: getSessions;
-  addSession: addSession;
   saveSessionPlayer: sessionPlayers;
   deleteUser: DeleteUser
   deleteBoardGame: DeleteBoardGame
+  updateSession: UpdateSession;
+  addLocationToSession: AddLocationToSession;
+  createSession: CreateSession;
 } 
 
 export default function createHttpServer(deps: HttpServerDeps): Express {
@@ -58,7 +62,6 @@ export default function createHttpServer(deps: HttpServerDeps): Express {
   app.use("/friendships", friendshipsRouter(deps))
   app.use("/sessions", sessionsRouter(deps));
   app.use("/sessionPlayers", sessionPlayerRouter(deps));
-
 
   return app;
 }
