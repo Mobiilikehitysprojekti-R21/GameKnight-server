@@ -1,10 +1,9 @@
-import createHttpServer from "./interfaces/http/server";
-
 import "dotenv/config";
+import createHttpServer from "./interfaces/http/server";
 import { pool } from "./infrastructure/postgres/db";
-import PostgresUserRepository from "./infrastructure/postgres/UserRepository";
 
-console.log("DATABASE_URL =", process.env.DATABASE_URL);
+
+// console.log("DATABASE_URL =", process.env.DATABASE_URL);
 
 (async () => {
   try {
@@ -18,8 +17,9 @@ console.log("DATABASE_URL =", process.env.DATABASE_URL);
 const userUseCases = require("./composition/user")();
 const boardGameUseCases = require("./composition/boardGame")();
 const friendshipUseCases = require("./composition/friendships")();
-const sessionUseCases = require("./composition/session")();
+const sessionUseCases = require("./composition/session").default();
 const sessionPlayerUseCases = require("./composition/sessionPlayer")(); 
+const locationUseCases = require("./composition/location").default();
 
 const app = createHttpServer({
   ...userUseCases,
@@ -27,6 +27,7 @@ const app = createHttpServer({
   ...friendshipUseCases,
   ...sessionUseCases,
   ...sessionPlayerUseCases,
+  ...locationUseCases
 });
 
 app.listen(3000, () => {

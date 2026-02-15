@@ -1,19 +1,24 @@
 import { Router } from "express";
-import sessions from "../../../application/session/getSessions";
+import { requireAuth } from "../middleware/auth";
+import { createSessionController } from "../controllers/createSessionController";
+import { addLocationToSessionController } from "../controllers/addLocationToSessionController";
 import getSessionsController from "../controllers/getSessionController";
-import addSession from "../../../application/session/addSession";
-import addSessionController from "../controllers/addSessionController";
+import { updateSessionController } from "../controllers/updateSessionController";
 
 export interface SessionRoutesDeps {
-    getSessions: sessions;
-    addSession: addSession;
+  getSessions: any;
+  updateSession: any;
+  addLocationToSession: any;
+  createSession: any;
 }
 
-export default function sessionsRoutes({ getSessions, addSession }: SessionRoutesDeps): Router {
+export default function sessionsRoutes({ getSessions, updateSession, addLocationToSession, createSession }: SessionRoutesDeps): Router {
   const router = Router();
-  
-  router.get("/", getSessionsController(getSessions));
-  router.post("/", addSessionController(addSession));
+
+  router.get("/", requireAuth, getSessionsController(getSessions));
+  router.post("/", requireAuth, createSessionController(createSession));
+  router.put("/:id/location", requireAuth, addLocationToSessionController(addLocationToSession));
+ router.put("/:id", requireAuth, updateSessionController);
 
   return router;
 }
