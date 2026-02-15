@@ -1,7 +1,7 @@
 import { CreateSession } from "../application/session/CreateSession";
 import { AddLocationToSession } from "../application/session/AddLocationToSession";
 import PostgresLocationRepository from "../infrastructure/postgres/LocationRepository";
-import getSessions from "../application/session/getSessions";
+import getSessions from "../application/session/GetGameSessions";
 import findByGroupID from "../application/session/findByGroupID";
 import InMemorySessionRepository from "../infrastructure/InMemory/SessionRepository";
 import PostgresSessionRepository from "../infrastructure/postgres/SessionRepository";
