@@ -38,15 +38,41 @@ class PostgresSessionRepository extends SessionRepository {
     }));
   }
 
-  async findByID(sessionID: number): Promise<Session | undefined> {
+  async createSessions({
+    session_id,
+    group_id,
+    user_id,
+    game_id,
+    played_at,
+    location_id,
+    notes
+  }: {
+    session_id: number;
+    group_id?: number | null;
+    user_id?: number | null;
+    game_id: number;
+    played_at: Date;
+    location_id?: number | null;
+    notes?: string;
+  }): Promise<Session | undefined> {
     const result = await this.pool.query(
-      `SELECT * FROM sessions WHERE session_id = $1`,
-      [sessionID]
+      `INSERT INTO sessions (session_id, group_id, user_id, game_id, played_at, location_id, notes)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       RETURNING *`,
+      [
+        session_id,
+        group_id ?? null,
+        user_id ?? null,
+        game_id,
+        played_at,
+        location_id ?? null,
+        notes ?? null
+      ]
     );
 
-    if (result.rowCount === 0) return undefined
+    if (result.rowCount === 0) return undefined;
 
-    const row = result.rows[0]
+    const row = result.rows[0];
     return new Session({
       session_id: row.session_id,
       group_id: row.group_id,
@@ -73,9 +99,15 @@ class PostgresSessionRepository extends SessionRepository {
         session.location_id || null,
         session.notes || null,
         session.session_id
-      ]
-    );
+      ]);
   }
+
+  async addLocationToSession(session_id: number, location_id: number): Promise<void> {
+  await this.pool.query(
+    `UPDATE sessions SET location_id = $1 WHERE session_id = $2`,
+    [location_id, session_id]
+  );
+}
 }
 
 export default PostgresSessionRepository;
