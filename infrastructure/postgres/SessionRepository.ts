@@ -26,17 +26,24 @@ class PostgresSessionRepository extends SessionRepository {
     }));
   }
 
-  async getSessions(): Promise<Session[]> {
-    const result = await this.pool.query(`SELECT * FROM sessions`);
-    return result.rows.map(row => new Session({
-      session_id: row.session_id,
-      group_id: row.group_id,
-      game_id: row.game_id,
-      played_at: row.played_at,
-      location_id: row.location_id,
-      notes: row.notes
-    }));
-  }
+  async getSessions(): Promise<any[]> {
+    const result = await this.pool.query(`
+        SELECT 
+            s.session_id, s.group_id, s.game_id, s.played_at, s.location_id, s.notes,
+            json_agg(
+                json_build_object(
+                    'user_id', sp.user_id,
+                    'score', sp.score,
+                    'is_winner', sp.is_winner
+                )
+            ) as players
+        FROM sessions s
+        LEFT JOIN session_players sp ON s.session_id = sp.session_id
+        GROUP BY s.session_id
+    `);
+    
+    return result.rows;
+}
 
   async createSessions({
     session_id,
