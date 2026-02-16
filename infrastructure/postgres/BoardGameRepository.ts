@@ -33,12 +33,12 @@ class PostgresBoardGameRepository extends BoardGameRepository {
         ));
     }
 
-    async addBoardGameToUser(userId: number, game: BoardGame["bgg_id"]): Promise<BoardGame["bgg_id"]> {
+    async addBoardGameToUser(userId: string, game: BoardGame["bgg_id"]): Promise<BoardGame["bgg_id"]> {
 
         const result = await this.pool.query(
-            `INSERT INTO userBoardgames (user_id, bgg_id)
+            `INSERT INTO userBoardgames (auth0_id, bgg_id)
             VALUES ($1, $2)
-            RETURNING user_id, bgg_id`,
+            RETURNING auth0_id, bgg_id`,
             [userId, game]
         )
 
@@ -50,11 +50,11 @@ class PostgresBoardGameRepository extends BoardGameRepository {
         }
     }
 
-    async getUserGameCollection(userId: number) {
+    async getUserGameCollection(userId: string) {
         const result = await this.pool.query(
             `SELECT * FROM boardgames b
             JOIN userBoardgames ub ON ub.bgg_id = b.bgg_id
-            WHERE ub.user_id = $1`,
+            WHERE ub.auth0_id = $1`,
             [userId]
         )
 
@@ -75,12 +75,12 @@ class PostgresBoardGameRepository extends BoardGameRepository {
     }
 
     // Delete BoardGame from user´s collection
-    async deleteBoardGame(bgg_id: number) {
+    async deleteBoardGame(bgg_id: number, auth0_id: string) {
         try {
             await this.pool.query(
                 `DELETE FROM userBoardgames
-                 WHERE bgg_id = $1`,
-                [bgg_id]
+                 WHERE bgg_id = $1 AND auth0_id = $2`,
+                [bgg_id, auth0_id]
             )
         } catch (e: any) {
             throw new Error("Failed to delete game from collection");

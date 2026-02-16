@@ -7,7 +7,7 @@ import deleteBoardGameController from "../controllers/deleteBoardGameController"
 import AddBoardGameToUser from "../../../application/boardgame/AddBoardGameToUser";
 import GetUserGameCollection from "../../../application/boardgame/GetUserGameCollection";
 import DeleteBoardGame from "../../../application/boardgame/DeleteBoardGame";
-import { requireAuth } from "../middleware/auth";
+import { optionalAuth, requireAuth } from "../middleware/auth";
 
 export interface BoardGameRoutesDeps {
   findBoardGame: FindBoardgame;
@@ -20,9 +20,9 @@ export default function userRoutes({ findBoardGame, addGameToUser, getUserGameCo
   const router = Router();
 
   router.get("/findByName", requireAuth, findBoardGameController(findBoardGame));
-  router.get("/getUserGameCollection/:user_id", getUserGameCollectionController(getUserGameCollection))
-  router.post("/addToUser", addBoardGameToUserController(addGameToUser))
-  router.delete("/:bgg_id", deleteBoardGameController(deleteBoardGame))
+  router.get("/getUserGameCollection/:user_id", requireAuth, getUserGameCollectionController(getUserGameCollection))
+  router.post("/addToUser", requireAuth, addBoardGameToUserController(addGameToUser))
+  router.delete("/:auth0_id/:bgg_id", requireAuth, deleteBoardGameController(deleteBoardGame))
 
   return router;
 }

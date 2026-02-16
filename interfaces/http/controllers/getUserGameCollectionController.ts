@@ -4,7 +4,7 @@ import GetUserGameCollection from "../../../application/boardgame/GetUserGameCol
 export default (getUserGameCollection: GetUserGameCollection) => 
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const userId = Number(req.params.user_id)
+      const userId = String(req.params.user_id)
       console.log(userId)
       const boardgames = await getUserGameCollection.execute({userId});
       res.status(200).json(boardgames);

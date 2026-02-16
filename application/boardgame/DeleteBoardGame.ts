@@ -4,6 +4,7 @@ import BoardGameRepository from "../../ports/BoardGameRepository";
 
 export interface DeleteBoardGameInput {
     bgg_id: number
+    auth0_id: string
 }
 
 class DeleteBoardGame {
@@ -14,13 +15,13 @@ class DeleteBoardGame {
         this.boardgameRepository = boardGameRepository
     }
 
-    async execute({bgg_id}: DeleteBoardGameInput): Promise<void> {
+    async execute({bgg_id, auth0_id}: DeleteBoardGameInput): Promise<void> {
         
-        if(!bgg_id){
+        if(!bgg_id || !auth0_id){
             return;
         }
 
-        return this.boardgameRepository.deleteBoardGame(bgg_id);
+        return this.boardgameRepository.deleteBoardGame(bgg_id, auth0_id);
     }
 }
 

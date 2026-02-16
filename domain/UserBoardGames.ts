@@ -1,11 +1,11 @@
 export interface UserBoardGamesProps {
-    userId: number;
+    auth0_id: string;
     bgg_id: number;
 }
 
 class UserBoardGames implements UserBoardGamesProps {
     constructor (
-    public readonly userId: number,
+    public readonly auth0_id: string,
     public readonly bgg_id: number,
     ) {
         

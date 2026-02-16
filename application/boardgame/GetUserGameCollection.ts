@@ -2,7 +2,7 @@ import BoardGame from "../../domain/BoardGame";
 import BoardGameRepository from "../../ports/BoardGameRepository";
 
 export interface GetUserGameCollectionInput {
-    userId: number
+    userId: string
 }
 
 class GetUserGameCollection {
