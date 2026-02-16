@@ -24,6 +24,7 @@ class PostgresUserRepository extends UserRepository {
         email: row.email,
         auth0_id: row.auth0_id,
         nickname: row.nickname,
+        avatar_url: row.avatar_url
       });
     } else {
       throw new Error("Failed to insert user");
@@ -45,6 +46,7 @@ class PostgresUserRepository extends UserRepository {
       email: row.email,
       auth0_id: row.auth0_id,
       nickname: row.nickname,
+      avatar_url: row.avatar_url
     });
   }
 
@@ -63,6 +65,7 @@ class PostgresUserRepository extends UserRepository {
       email: row.email,
       auth0_id: row.auth0_id,
       nickname: row.nickname,
+      avatar_url: row.avatar_url
     });
   }
 
@@ -81,6 +84,7 @@ class PostgresUserRepository extends UserRepository {
       email: row.email,
       auth0_id: row.auth0_id,
       nickname: row.nickname,
+      avatar_url: row.avatar_url
     });
   }
 
@@ -101,6 +105,48 @@ class PostgresUserRepository extends UserRepository {
         email: row.email,
         auth0_id: row.auth0_id,
         nickname: row.nickname,
+        avatar_url: row.avatar_url
+      });
+    } else {
+      throw new Error("Failed to update nickname");
+    }
+  }
+
+  async addAvatarUrl(avatar_url: string, auth0_id: string): Promise<void> {
+    
+    try {
+      const res = await this.pool.query(
+        ` UPDATE users 
+        SET avatar_url = $1
+        WHERE auth0_id = $2
+        RETURNING user_id, auth0_id, email, nickname
+      `,
+
+      )
+
+    } catch (e: any) {
+
+    }
+  }
+
+  async fetchUserNickname(auth0_id: string): Promise<User> {
+
+    const result = await this.pool.query(
+      ` SELECT * FROM users 
+        WHERE auth0_id = $1
+        RETURNING user_id, auth0_id, email, nickname
+      `,
+      [auth0_id]
+    )
+
+    if (result.rows.length > 0) {
+      const row = result.rows[0]
+      return new User({
+        user_id: row.user_id,
+        email: row.email,
+        auth0_id: row.auth0_id,
+        nickname: row.nickname,
+        avatar_url: row.avatar_url
       });
     } else {
       throw new Error("Failed to update nickname");
