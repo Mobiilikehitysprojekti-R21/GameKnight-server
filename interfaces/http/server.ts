@@ -1,4 +1,5 @@
 import express, { Express } from "express";
+import path from "path";
 import cors from "cors";
 import userRoutes from "./routes/users";
 import CreateUser from "../../application/user/CreateUser";
@@ -24,6 +25,7 @@ import DeleteBoardGame from "../../application/boardgame/DeleteBoardGame";
 import UpdateSession from "../../application/session/updateSession";
 import AddLocationToSession from "../../application/session/AddLocationToSession";
 import CreateSession from "../../application/session/CreateSession";
+import FetchUserNickname from "../../application/user/FetchUserNickname";
 
 export interface HttpServerDeps {
   createUser: CreateUser;
@@ -45,6 +47,7 @@ export interface HttpServerDeps {
   updateSession: UpdateSession;
   addLocationToSession: AddLocationToSession;
   createSession: CreateSession;
+  fetchUserNickname: FetchUserNickname
 } 
 
 export default function createHttpServer(deps: HttpServerDeps): Express {
@@ -52,6 +55,7 @@ export default function createHttpServer(deps: HttpServerDeps): Express {
 
   app.use(cors());
   app.use(express.json());
+  app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
   app.use("/users", userRoutes(deps));
 
