@@ -29,10 +29,7 @@ export default function userRoutes({ createUser, validateNickname, updateNicknam
   // Protected routes - require valid JWT token
   router.post("/", requireAuth, createUserController(createUser));
   router.post("/validateNickname", requireAuth, validateNicknameController(validateNickname));
-  router.post("/newAvatar", requireAuth, (req: any, res, next) => {
-  console.log("✅ Auth passed! User:", req.auth?.sub);
-  next();
-}, uploadAvatar.single("file"), addAvatarController(addAvatar))
+  router.post("/newAvatar", requireAuth, addAvatarController(addAvatar))
   router.patch("/updateNickname", requireAuth, updateNicknameController(updateNickname))
   router.post("/fetchUserNickname", requireAuth, fetchUserNicknameController(fetchUserNickname))
   router.delete("/:auth0_id", requireAuth, deleteUserController(deleteUser))
