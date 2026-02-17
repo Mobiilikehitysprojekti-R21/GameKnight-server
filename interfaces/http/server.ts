@@ -24,6 +24,7 @@ import DeleteBoardGame from "../../application/boardgame/DeleteBoardGame";
 import UpdateSession from "../../application/session/updateSession";
 import AddLocationToSession from "../../application/session/AddLocationToSession";
 import CreateSession from "../../application/session/CreateSession";
+import FetchUserNickname from "../../application/user/FetchUserNickname";
 
 export interface HttpServerDeps {
   createUser: CreateUser;
@@ -36,15 +37,16 @@ export interface HttpServerDeps {
   addFriend: AddFriend;
   acceptRequest: AcceptRequest;
   inviteFriend: InviteFriend;
-  addGameToUser: AddBoardGameToUser
-  getUserGameCollection: GetUserGameCollection
+  addGameToUser: AddBoardGameToUser;
+  getUserGameCollection: GetUserGameCollection;
   getSessions: getSessions;
   saveSessionPlayer: sessionPlayers;
-  deleteUser: DeleteUser
-  deleteBoardGame: DeleteBoardGame
+  deleteUser: DeleteUser;
+  deleteBoardGame: DeleteBoardGame;
   updateSession: UpdateSession;
   addLocationToSession: AddLocationToSession;
   createSession: CreateSession;
+  fetchUserNickname: FetchUserNickname;
 } 
 
 export default function createHttpServer(deps: HttpServerDeps): Express {
