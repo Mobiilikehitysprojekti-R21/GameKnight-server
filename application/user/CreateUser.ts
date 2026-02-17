@@ -5,6 +5,7 @@ export interface CreateUserInput {
   email: string;
   auth0_id: string;
   nickname: string;
+  avatar_url: string
 }
 
 class CreateUser {
