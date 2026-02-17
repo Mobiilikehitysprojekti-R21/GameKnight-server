@@ -112,22 +112,26 @@ class PostgresUserRepository extends UserRepository {
     }
   }
 
-  async addAvatarUrl(avatar_url: string, auth0_id: string): Promise<void> {
+  async addAvatarUrl(avatar_url: string, auth0_id: string): Promise<String> {
     
     try {
-      const res = await this.pool.query(
-        ` UPDATE users 
-        SET avatar_url = $1
-        WHERE auth0_id = $2
-        RETURNING user_id, auth0_id, email, nickname
-      `,
+    const result = await this.pool.query(
+      `UPDATE users
+       SET avatar_url = $1
+       WHERE auth0_id = $2
+       RETURNING avatar_url`,
+      [avatar_url, auth0_id]
+    );
 
-      )
-
-    } catch (e: any) {
-
+    if (result.rowCount === 0) {
+      throw new Error("User not found");
     }
+
+    return result.rows[0].avatar_url;
+  } catch (e: any) {
+    throw new Error("Failed to add new avatar url");
   }
+}
 
   async fetchUserNickname(auth0_id: string): Promise<User> {
 

@@ -7,6 +7,7 @@ abstract class UserRepository {
   abstract findByNickname(nickname: string): Promise<User | undefined>;
   abstract updateNickname(nickname: string, auth0_id: string): Promise<User>
   abstract deleteUser(auth0_id: string):Promise<void>
+  abstract addAvatarUrl(avatar_url: string, auth0_id: string): Promise<String>
 }
 
 export default UserRepository;

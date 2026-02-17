@@ -17,7 +17,7 @@ CREATE TABLE users (
   auth0_id TEXT UNIQUE NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   nickname VARCHAR(60) NOT NULL UNIQUE,
-  avatar_url text DEFAULT '/uploads/avatars/default.png',
+  avatar_url TEXT DEFAULT '/uploads/avatars/default.png',
   created_at TIMESTAMP DEFAULT NOW()
 );
 
