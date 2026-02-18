@@ -76,6 +76,10 @@ subgraph 1H["InMemory"]
 1Z["SessionPlayerRepository.ts"]
 20["UserRepository.ts"]
 end
+subgraph 21["bgg"]
+22["BggXmlApi2Client.ts"]
+23["bggSyncWorker.ts"]
+end
 end
 subgraph 17["ports"]
 18["BoardGameRepository.ts"]
@@ -83,49 +87,49 @@ subgraph 17["ports"]
 1J["SessionRepository.ts"]
 1O["SessionPlayerRepository.ts"]
 1R["UserRepository.ts"]
-2W["LocationRepository.ts"]
+2Z["LocationRepository.ts"]
 end
 1V["fs"]
 1W["path"]
-subgraph 21["interfaces"]
-subgraph 22["http"]
-subgraph 23["controllers"]
-24["acceptRequestController.ts"]
-25["addBoardGameToUserController.ts"]
-26["addFriendController.ts"]
-27["addLocationToSessionController.ts"]
-28["createSessionController.ts"]
-29["createUserController.ts"]
-2A["declineFriendRequestController.ts"]
-2B["deleteBoardGameController.ts"]
-2C["deleteUserController.ts"]
-2D["findBoardGameController.ts"]
-2E["getFriendRequestsController.ts"]
-2F["getFriendsController.ts"]
-2G["getSessionController.ts"]
-2H["getUserGameCollectionController.ts"]
-2I["inviteFriendController.ts"]
-2J["saveSessionPlayerController.ts"]
-2K["updateNicknameController.ts"]
-2L["updateSessionController.ts"]
-2M["validateNicknameController.ts"]
+subgraph 24["interfaces"]
+subgraph 25["http"]
+subgraph 26["controllers"]
+27["acceptRequestController.ts"]
+28["addBoardGameToUserController.ts"]
+29["addFriendController.ts"]
+2A["addLocationToSessionController.ts"]
+2B["createSessionController.ts"]
+2C["createUserController.ts"]
+2D["declineFriendRequestController.ts"]
+2E["deleteBoardGameController.ts"]
+2F["deleteUserController.ts"]
+2G["findBoardGameController.ts"]
+2H["getFriendRequestsController.ts"]
+2I["getFriendsController.ts"]
+2J["getSessionController.ts"]
+2K["getUserGameCollectionController.ts"]
+2L["inviteFriendController.ts"]
+2M["saveSessionPlayerController.ts"]
+2N["updateNicknameController.ts"]
+2O["updateSessionController.ts"]
+2P["validateNicknameController.ts"]
 end
-subgraph 2N["middleware"]
-2O["auth.ts"]
+subgraph 2Q["middleware"]
+2R["auth.ts"]
 end
-subgraph 2P["routes"]
-2Q["boardgames.ts"]
-2R["friendships.ts"]
-2S["sessionPlayers.ts"]
-2T["sessions.ts"]
-2U["users.ts"]
+subgraph 2S["routes"]
+2T["boardgames.ts"]
+2U["friendships.ts"]
+2V["sessionPlayers.ts"]
+2W["sessions.ts"]
+2X["users.ts"]
 end
-2V["server.ts"]
+2Y["server.ts"]
 end
 end
-2X["server.ts"]
-subgraph 2Y["tests"]
-2Z["dbTest.js"]
+30["server.ts"]
+subgraph 31["tests"]
+32["dbTest.js"]
 end
 F-->H
 K-->H
@@ -191,39 +195,41 @@ X-->Y
 20-->H
 20-->Y
 20-->1R
-2L-->1G
-2Q-->25
-2Q-->2B
-2Q-->2D
-2Q-->2H
-2Q-->2O
-2R-->24
-2R-->26
-2R-->2A
-2R-->2E
-2R-->2F
-2R-->2I
-2S-->2J
-2T-->27
+23-->22
+2O-->1G
 2T-->28
+2T-->2E
 2T-->2G
-2T-->2L
-2T-->2O
+2T-->2K
+2T-->2R
+2U-->27
 2U-->29
-2U-->2C
-2U-->2K
-2U-->2M
-2U-->2O
-2V-->2Q
-2V-->2R
-2V-->2S
-2V-->2T
-2V-->2U
-2X-->12
-2X-->1A
-2X-->1E
-2X-->1G
-2X-->1L
-2X-->1P
-2X-->19
-2X-->2V
+2U-->2D
+2U-->2H
+2U-->2I
+2U-->2L
+2V-->2M
+2W-->2A
+2W-->2B
+2W-->2J
+2W-->2O
+2W-->2R
+2X-->2C
+2X-->2F
+2X-->2N
+2X-->2P
+2X-->2R
+2Y-->2T
+2Y-->2U
+2Y-->2V
+2Y-->2W
+2Y-->2X
+30-->12
+30-->1A
+30-->1E
+30-->1G
+30-->1L
+30-->1P
+30-->23
+30-->19
+30-->2Y
