@@ -8,6 +8,7 @@ export interface BoardGameProps {
     average?: number;
     users_rated?: number;
     is_expansion: boolean;
+    thumbnail_url?: string;
 }
 
 class BoardGame implements BoardGameProps {
@@ -21,6 +22,7 @@ class BoardGame implements BoardGameProps {
     public readonly bayes_average?: number,
     public readonly average?: number,
     public readonly users_rated?: number,
+    public readonly thumbnail_url?: string,
     ) {
         
     }
