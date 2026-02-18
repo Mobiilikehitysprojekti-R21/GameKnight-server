@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import getSessions from "../../../application/session/getSessions";
+import getSessions from "../../../application/session/GetGameSessions";
 
 export default (getSessionsUseCase: getSessions) =>
   async (req: Request, res: Response): Promise<void> => {
