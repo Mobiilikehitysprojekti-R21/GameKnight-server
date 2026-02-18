@@ -7,11 +7,12 @@
     "dev": "ts-node-dev --respawn --transpile-only server.ts"
   },
   "dependencies": {
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^4.22.1",
     "express-jwt": "^8.5.1",
     "jwks-rsa": "^3.2.2",
+    "multer": "^2.0.2",
     "pg": "^8.17.1"
   },
   "devDependencies": {
@@ -22,6 +23,7 @@
     "@types/express-jwt": "^6.0.4",
     "@types/geojson": "^7946.0.16",
     "@types/http-errors": "^2.0.5",
+    "@types/multer": "^2.0.0",
     "@types/node": "^25.0.9",
     "@types/pg": "^8.16.0",
     "@types/range-parser": "^1.2.7",

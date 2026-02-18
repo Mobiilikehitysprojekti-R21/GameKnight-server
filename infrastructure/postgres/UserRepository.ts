@@ -10,6 +10,7 @@ class PostgresUserRepository extends UserRepository {
     this.pool = pool;
   }
 
+  // INSERT user
   async save(user: User): Promise<User> {
     const result = await this.pool.query(
       `INSERT INTO users (email, auth0_id, nickname)
@@ -31,6 +32,7 @@ class PostgresUserRepository extends UserRepository {
     }
   }
 
+  // FIND user by email
   async findByEmail(email: string): Promise<User | undefined> {
     const result = await this.pool.query(
       `SELECT * FROM users WHERE email = $1`,
@@ -50,6 +52,7 @@ class PostgresUserRepository extends UserRepository {
     });
   }
 
+  // FIND user by id
   async findById(auth0_id: string): Promise<User | undefined> {
     const result = await this.pool.query(
       `SELECT * FROM users WHERE auth0_id = $1`,
@@ -69,6 +72,7 @@ class PostgresUserRepository extends UserRepository {
     });
   }
 
+  // FIND user by nickname
   async findByNickname(nickname: string): Promise<User | undefined> {
     const result = await this.pool.query(
       `SELECT * FROM users WHERE nickname = $1`,
@@ -88,6 +92,7 @@ class PostgresUserRepository extends UserRepository {
     });
   }
 
+  // UPDATE nickname
   async updateNickname(nickname: string, auth0_id: string): Promise<User> {
 
     const result = await this.pool.query(
@@ -112,23 +117,29 @@ class PostgresUserRepository extends UserRepository {
     }
   }
 
-  async addAvatarUrl(avatar_url: string, auth0_id: string): Promise<void> {
+  // ADD new profile picture
+  async addAvatarUrl(avatar_url: string, auth0_id: string): Promise<String> {
     
     try {
-      const res = await this.pool.query(
-        ` UPDATE users 
-        SET avatar_url = $1
-        WHERE auth0_id = $2
-        RETURNING user_id, auth0_id, email, nickname
-      `,
+    const result = await this.pool.query(
+      `UPDATE users
+       SET avatar_url = $1
+       WHERE auth0_id = $2
+       RETURNING avatar_url`,
+      [avatar_url, auth0_id]
+    );
 
-      )
-
-    } catch (e: any) {
-
+    if (result.rowCount === 0) {
+      throw new Error("User not found");
     }
-  }
 
+    return result.rows[0].avatar_url;
+  } catch (e: any) {
+    throw new Error("Failed to add new avatar url");
+  }
+}
+// Function to fetch user's nickname (and more)
+// Despite the name all user data is returned
   async fetchUserNickname(auth0_id: string): Promise<User> {
 
     const result = await this.pool.query(
@@ -153,6 +164,7 @@ class PostgresUserRepository extends UserRepository {
     }
   }
 
+  // DELETE user
   async deleteUser(auth0_id: string): Promise<void> {
 
     try {
