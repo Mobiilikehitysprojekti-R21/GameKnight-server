@@ -19,17 +19,16 @@ class PostgresBoardGameRepository extends BoardGameRepository {
         )
 
         return result.rows.map(row => new BoardGame(
-            
             row.bgg_id,
             row.name,
             row.is_expansion,
             row.game_id,
-            row.year_published,
-            row.rank,
-            row.bayes_average,
-            row.average,
-            row.users_rated,
-            
+            row.year_published ?? undefined,
+            row.rank ?? undefined,
+            row.bayes_average == null ? undefined : Number(row.bayes_average),
+            row.average == null ? undefined : Number(row.average),
+            row.users_rated ?? undefined,
+            row.thumbnail_url ?? undefined,
         ));
     }
 
@@ -59,17 +58,16 @@ class PostgresBoardGameRepository extends BoardGameRepository {
         )
 
         return result.rows.map(row => new BoardGame(
-            
             row.bgg_id,
             row.name,
             row.is_expansion,
             row.game_id,
-            row.year_published,
-            row.rank,
-            row.bayes_average,
-            row.average,
-            row.users_rated,
-            
+            row.year_published ?? undefined,
+            row.rank ?? undefined,
+            row.bayes_average == null ? undefined : Number(row.bayes_average),
+            row.average == null ? undefined : Number(row.average),
+            row.users_rated ?? undefined,
+            row.thumbnail_url ?? undefined,
         ));
 
     }

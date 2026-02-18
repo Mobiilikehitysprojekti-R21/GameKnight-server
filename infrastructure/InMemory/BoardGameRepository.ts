@@ -96,9 +96,9 @@ const BOARDGAMES_CACHE: BoardGame[] = loadBoardGamesFromCsv();
 
 class InMemoryBoardGameRepository extends BoardGameRepository {
   private readonly boardGames: BoardGame[] = BOARDGAMES_CACHE;
+  private readonly userCollections: Map<string, Set<number>> = new Map();
 
   async search(query: string): Promise<BoardGame[] | undefined> {
-    
     const trimmedQuery = query.trim().toLowerCase();
 
     if (!trimmedQuery) {
@@ -108,6 +108,25 @@ class InMemoryBoardGameRepository extends BoardGameRepository {
     return this.boardGames.filter((game) =>
       game.name.toLowerCase().includes(trimmedQuery)
     );
+  }
+
+  async addBoardGameToUser(userId: string, game: BoardGame["bgg_id"]): Promise<BoardGame["bgg_id"]> {
+    const existing = this.userCollections.get(userId) ?? new Set<number>();
+    existing.add(Number(game));
+    this.userCollections.set(userId, existing);
+    return game;
+  }
+
+  async getUserGameCollection(userId: string): Promise<BoardGame[]> {
+    const ids = this.userCollections.get(userId);
+    if (!ids || ids.size === 0) return [];
+    return this.boardGames.filter((g) => ids.has(g.bgg_id));
+  }
+
+  async deleteBoardGame(bgg_id: number, auth0_id: string): Promise<void> {
+    const ids = this.userCollections.get(auth0_id);
+    if (!ids) return;
+    ids.delete(bgg_id);
   }
 }
 

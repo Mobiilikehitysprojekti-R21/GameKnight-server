@@ -1,24 +1,13 @@
 import "dotenv/config";
 import createHttpServer from "./interfaces/http/server";
 import { pool } from "./infrastructure/postgres/db";
-
-
-// console.log("DATABASE_URL =", process.env.DATABASE_URL);
-
-(async () => {
-  try {
-    await pool.query("SELECT 1");
-    console.log("✅ Database connection OK");
-  } catch (err) {
-    console.error("❌ Database connection failed", err);
-  }
-})();
+import { startBggSyncWorker } from "./infrastructure/bgg/bggSyncWorker";
 
 const userUseCases = require("./composition/user")();
 const boardGameUseCases = require("./composition/boardGame")();
 const friendshipUseCases = require("./composition/friendships")();
 const sessionUseCases = require("./composition/session").default();
-const sessionPlayerUseCases = require("./composition/sessionPlayer")(); 
+const sessionPlayerUseCases = require("./composition/sessionPlayer")();
 const locationUseCases = require("./composition/location").default();
 
 const app = createHttpServer({
@@ -27,8 +16,19 @@ const app = createHttpServer({
   ...friendshipUseCases,
   ...sessionUseCases,
   ...sessionPlayerUseCases,
-  ...locationUseCases
+  ...locationUseCases,
 });
+
+(async () => {
+  try {
+    await pool.query("SELECT 1");
+    console.log("✅ Database connection OK");
+
+    startBggSyncWorker(pool);
+  } catch (err) {
+    console.error("❌ Database connection failed", err);
+  }
+})();
 
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");

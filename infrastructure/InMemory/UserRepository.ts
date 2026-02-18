@@ -40,6 +40,10 @@ class InMemoryUserRepository extends UserRepository {
     return this.users.find((u) => u.email === email);
   }
 
+  async findById(auth0_id: string): Promise<User | undefined> {
+    return this.users.find((u) => u.auth0_id === auth0_id);
+  }
+
   async findByNickname(nickname: string): Promise<User | undefined> {
     return this.users.find((u) => u.nickname === nickname);
   }
@@ -70,6 +74,12 @@ class InMemoryUserRepository extends UserRepository {
     });
 
     this.favoriteLocations.set(user_id, [...existing, newLocation]);
+  }
+
+  async deleteUser(auth0_id: string): Promise<void> {
+    const index = this.users.findIndex((u) => u.auth0_id === auth0_id);
+    if (index === -1) return;
+    this.users.splice(index, 1);
   }
 }
 
