@@ -18,7 +18,7 @@ export default function sessionsRoutes({ getSessions, updateSession, addLocation
   router.get("/", requireAuth, getSessionsController(getSessions));
   router.post("/", requireAuth, createSessionController(createSession));
   router.put("/:id/location", requireAuth, addLocationToSessionController(addLocationToSession));
- router.put("/:id", requireAuth, updateSessionController);
+  router.put("/:id", requireAuth, updateSessionController(updateSession));
 
   return router;
 }
