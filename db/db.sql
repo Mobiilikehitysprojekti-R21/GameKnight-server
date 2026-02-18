@@ -30,7 +30,9 @@ CREATE TABLE boardgames (
   bayes_average DECIMAL(5,2),
   average DECIMAL(5,2),
   users_rated INT,
-  is_expansion BOOLEAN DEFAULT false
+  is_expansion BOOLEAN DEFAULT false,
+  thumbnail_url TEXT,
+  bgg_fetched_at TIMESTAMPTZ
 );
 
 CREATE TABLE userBoardgames (

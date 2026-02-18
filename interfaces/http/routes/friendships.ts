@@ -5,8 +5,8 @@ import getFriendRequestsController from "../controllers/getFriendRequestsControl
 import addFriendController from "../controllers/addFriendController";
 import acceptRequestController from "../controllers/acceptRequestController";
 import declineFriendRequestController from "../controllers/declineFriendRequestController";
+import { requireAuth } from "../middleware/auth";
 
-// Extend Express Request interface to include 'user'
 declare module 'express-serve-static-core' {
     interface Request {
         user?: { id: string };
@@ -19,6 +19,7 @@ import GetFriendRequests from "../../../application/friendships/GetFriendRequest
 import AddFriend from "../../../application/friendships/AddFriend";
 import AcceptRequest from "../../../application/friendships/AcceptRequest";
 import DeclineRequest from "../../../application/friendships/DeclineRequest";
+import FetchUserNickname from "../../../application/user/FetchUserNickname";
 
 function asyncHandler<T extends (...args: any[]) => Promise<any>>(fn: T) {
     return function (req: Request, res: any, next: any) {
@@ -33,15 +34,23 @@ export interface FriendshipsRoutesDeps {
     addFriend: AddFriend;
     acceptRequest: AcceptRequest;
     declineRequest: DeclineRequest;
+    fetchUserNickname: FetchUserNickname;
 }
 
-export default function friendshipsRoutes({ inviteFriend, getFriends, getFriendRequests, addFriend, acceptRequest, declineRequest }: FriendshipsRoutesDeps): Router {
+export default function friendshipsRoutes({ inviteFriend, getFriends, getFriendRequests, addFriend, acceptRequest, declineRequest, fetchUserNickname }: FriendshipsRoutesDeps): Router {
     const router = Router();
-    // Mock authentication
-    router.use((req, res, next) => {
-        req.user = { id: '1' };
+    router.use(requireAuth);
+    router.use(asyncHandler(async (req, res, next) => {
+        const auth0_id = (req as any).auth?.sub;
+        if (!auth0_id) {
+            res.status(401).json({ error: "Unauthorized: missing user identity" });
+            return;
+        }
+
+        const user = await fetchUserNickname.execute({ auth0_id });
+        req.user = { id: String(user.user_id) };
         next();
-    });
+    }));
     router.get("/", asyncHandler(getFriendsController(getFriends))); // GET /friendships
     router.post("/", asyncHandler(addFriendController(addFriend))); // POST /friendships
     router.post("/invite", asyncHandler(inviteFriendController(inviteFriend))); // POST /friendships/invite

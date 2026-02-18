@@ -40,12 +40,12 @@ export interface HttpServerDeps {
   addFriend: AddFriend;
   acceptRequest: AcceptRequest;
   inviteFriend: InviteFriend;
-  addGameToUser: AddBoardGameToUser
-  getUserGameCollection: GetUserGameCollection
+  addGameToUser: AddBoardGameToUser;
+  getUserGameCollection: GetUserGameCollection;
   getSessions: getSessions;
   saveSessionPlayer: sessionPlayers;
-  deleteUser: DeleteUser
-  deleteBoardGame: DeleteBoardGame
+  deleteUser: DeleteUser;
+  deleteBoardGame: DeleteBoardGame;
   updateSession: UpdateSession;
   addLocationToSession: AddLocationToSession;
   createSession: CreateSession;
