@@ -45,23 +45,23 @@ class PostgresFriendRepository extends FriendRepository {
     }
 
     const friendId = lookup.rows[0].user_id as number;
+    console.log(`Adding friend: userId=${userId} friendId=${friendId}`);
 
     if (friendId === userId) {
       throw new Error("A user cannot be friends with themselves");
     }
-
+console.log("About to insert:", { userId, friendId, status: "pending" });
     // Estä duplikaattipending/accepted – upsert pending
     const insert = await this.pool.query(
-      `
-      INSERT INTO friendships (user_id, friend_id, status)
-      VALUES ($1, $2, 'pending')
+      `INSERT INTO friendships (user_id, friend_id, status)
+      VALUES ($1, $2, $3)
       ON CONFLICT (user_id, friend_id)
-      DO UPDATE SET status = 'pending'
+      DO UPDATE SET status = $4
       RETURNING request_id
       `,
-      [userId, friendId]
+      [userId, friendId, 'pending', 'pending']
     );
-
+console.log("Insert result:", insert.rows);
     return insert.rows[0].request_id as number;
   }
 

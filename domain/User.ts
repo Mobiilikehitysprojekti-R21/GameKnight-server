@@ -5,6 +5,7 @@ export interface UserProps {
   auth0_id: string;
   email: string;
   nickname: string;
+  avatar_url: string
 }
 
 class User {
@@ -12,8 +13,9 @@ class User {
   public readonly auth0_id: string;
   public readonly email: string;
   public readonly nickname: string;
+  public readonly avatar_url: string
 
-  constructor({ user_id, email, auth0_id, nickname }: UserProps) {
+  constructor({ user_id, email, auth0_id, nickname, avatar_url }: UserProps) {
     if (!email.includes("@")) {
       throw new Error("Invalid email");
     }
@@ -22,6 +24,7 @@ class User {
     this.auth0_id = auth0_id;
     this.email = email;
     this.nickname = nickname;
+    this.avatar_url = avatar_url;
   }
 }
 
