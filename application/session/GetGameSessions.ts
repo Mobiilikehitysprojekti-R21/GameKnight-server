@@ -1,5 +1,4 @@
-import SessionRepository from "../../ports/SessionRepository";
-// testaan
+import SessionRepository, { SessionDTO } from "../../ports/SessionRepository";
 
 class getSessions {
     private readonly sessionRepository: SessionRepository;
@@ -8,7 +7,7 @@ class getSessions {
         this.sessionRepository = sessionRepository;
     }
 
-    async execute(): Promise<any[]> {
+    async execute(): Promise<SessionDTO[]> {
         return this.sessionRepository.getSessions();
     }
 }

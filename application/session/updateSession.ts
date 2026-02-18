@@ -1,4 +1,4 @@
-import Session from "../../domain/Session";
+import Session, { SessionProps } from "../../domain/Session";
 import SessionRepository from "../../ports/SessionRepository";
 
 export default class UpdateSession {
@@ -8,7 +8,7 @@ export default class UpdateSession {
     this.sessionRepository = sessionRepository;
   }
 
-  async execute(session: Session): Promise<void> {
-    await this.sessionRepository.updateSession(session);
+  async execute(session: SessionProps): Promise<void> {
+    await this.sessionRepository.updateSession(new Session(session));
   }
 }

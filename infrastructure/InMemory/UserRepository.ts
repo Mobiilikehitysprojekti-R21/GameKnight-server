@@ -14,6 +14,7 @@ class InMemoryUserRepository extends UserRepository {
       email: user.email,
       auth0_id: user.auth0_id,
       nickname: user.nickname,
+      avatar_url: user.avatar_url,
     });
     this.users.push(userWithId);
     return userWithId;
