@@ -16,6 +16,7 @@ export interface SessionRoutesDeps {
   updateSession: any;
   addLocationToSession: any;
   createSession: any;
+  userRepository: any;
 }
 
 export default function sessionsRoutes({
@@ -25,6 +26,7 @@ export default function sessionsRoutes({
   updateSession,
   addLocationToSession,
   createSession,
+  userRepository,
 }: SessionRoutesDeps): Router {
   const router = Router();
 
@@ -32,7 +34,7 @@ export default function sessionsRoutes({
   router.get("/user/:user_id", requireAuth, getSessionsByUserIdController(getSessionsByUserId));
   router.get("/:id", requireAuth, getSessionByIdController(getSessionById));
 
-  router.post("/", requireAuth, createSessionController(createSession));
+  router.post("/", requireAuth, createSessionController(createSession, userRepository));
   router.put("/:id/location", requireAuth, addLocationToSessionController(addLocationToSession));
   router.put("/:id", requireAuth, updateSessionController(updateSession));
 

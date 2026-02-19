@@ -4,15 +4,17 @@ import SessionRepository from "../../ports/SessionRepository";
 import { LocationRepository } from "../../ports/LocationRepository";
 
 interface CreateSessionInput {
-  session_id: number;
+  user_id: number;
   group_id?: number | null;
-  user_id?: number | null;
   game_id: number;
   played_at: Date;
   location?: {
     name: string;
   };
   notes?: string;
+  guest_players?: Array<{
+    name: string;
+  }>;
 }
 
 export class CreateSession {
@@ -31,18 +33,21 @@ export class CreateSession {
       locationId = location.location_id;
     }
 
-    const session = new Session({
-      session_id: 0, // repo asettaa
+    const result = await this.sessionRepository.createSessions({
+      user_id: input.user_id,
       group_id: input.group_id,
       game_id: input.game_id,
       played_at: input.played_at,
       location_id: locationId,
-      notes: input.notes
+      notes: input.notes,
+      guest_players: input.guest_players
     });
 
-    await this.sessionRepository.updateSession(session);
+    if (!result) {
+      throw new Error("Failed to create session");
+    }
 
-    return session;
+    return result;
   }
 }
 

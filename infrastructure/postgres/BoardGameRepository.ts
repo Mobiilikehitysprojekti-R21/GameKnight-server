@@ -32,8 +32,32 @@ class PostgresBoardGameRepository extends BoardGameRepository {
         ));
     }
 
-    async addBoardGameToUser(userId: string, game: BoardGame["bgg_id"]): Promise<BoardGame["bgg_id"]> {
+    async getById(gameId: number): Promise<BoardGame | undefined> {
+        const result = await this.pool.query(
+            `SELECT *
+            FROM boardgames
+            WHERE game_id = $1`,
+            [gameId]
+        )
 
+        if (result.rows.length === 0) return undefined;
+
+        const row = result.rows[0];
+        return new BoardGame(
+            row.bgg_id,
+            row.name,
+            row.is_expansion,
+            row.game_id,
+            row.year_published ?? undefined,
+            row.rank ?? undefined,
+            row.bayes_average == null ? undefined : Number(row.bayes_average),
+            row.average == null ? undefined : Number(row.average),
+            row.users_rated ?? undefined,
+            row.thumbnail_url ?? undefined,
+        );
+    }
+
+    async addBoardGameToUser(userId: string, game: BoardGame["bgg_id"]): Promise<BoardGame["bgg_id"]> {
         const result = await this.pool.query(
             `INSERT INTO userBoardgames (auth0_id, bgg_id)
             VALUES ($1, $2)

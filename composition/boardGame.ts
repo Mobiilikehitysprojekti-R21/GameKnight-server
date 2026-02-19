@@ -1,4 +1,5 @@
 import FindBoardGame from "../application/boardgame/FindBoardGame";
+import GetBoardGame from "../application/boardgame/GetBoardGame";
 import BoardGameRepository from "../infrastructure/InMemory/BoardGameRepository";
 import { pool } from "../infrastructure/postgres/db";
 import PostgresBoardGameRepository from "../infrastructure/postgres/BoardGameRepository";
@@ -13,6 +14,7 @@ module.exports = function createBoardGameUseCases() {
 
   return {
     findBoardGame: new FindBoardGame(boardgameRepo),
+    getBoardGame: new GetBoardGame(boardgameRepo),
     addGameToUser: new AddBoardGameToUser(boardgameRepo),
     getUserGameCollection: new GetUserGameCollection(boardgameRepo),
     deleteBoardGame: new DeleteBoardGame(boardgameRepo)

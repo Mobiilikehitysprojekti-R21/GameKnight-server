@@ -78,7 +78,7 @@ CREATE TABLE user_favorite_locations (
 
 CREATE TABLE sessions (
   session_id SERIAL PRIMARY KEY,
-  group_id INT NOT NULL REFERENCES groups(group_id) ON DELETE CASCADE,
+  group_id INT REFERENCES groups(group_id) ON DELETE CASCADE,
   game_id INT NOT NULL REFERENCES boardgames(game_id) ON DELETE RESTRICT,
   played_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   location_id INT REFERENCES locations(location_id) ON DELETE SET NULL,
@@ -87,10 +87,11 @@ CREATE TABLE sessions (
 
 CREATE TABLE session_players (
   session_id INT NOT NULL REFERENCES sessions(session_id) ON DELETE CASCADE,
-  user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+  guest_name VARCHAR(255),
   score INT,
   is_winner BOOLEAN NOT NULL DEFAULT false,
-  PRIMARY KEY (session_id, user_id)
+  PRIMARY KEY (session_id, COALESCE(user_id, guest_name))
 );
 
 CREATE INDEX idx_sessions_group_played_at

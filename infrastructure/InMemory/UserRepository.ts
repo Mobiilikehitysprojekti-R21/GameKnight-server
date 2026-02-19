@@ -84,6 +84,23 @@ class InMemoryUserRepository extends UserRepository {
     if (index === -1) return;
     this.users.splice(index, 1);
   }
+
+  async addAvatarUrl(avatar_url: string, auth0_id: string): Promise<String> {
+    const user = this.users.find(u => u.auth0_id === auth0_id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const updatedUser = new User({
+      ...user,
+      avatar_url
+    });
+
+    const index = this.users.findIndex(u => u.auth0_id === auth0_id);
+    this.users[index] = updatedUser;
+
+    return avatar_url;
+  }
 }
 
 export default InMemoryUserRepository;
