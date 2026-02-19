@@ -13,13 +13,8 @@ class DeclineRequest {
     this.friendRepository = friendRepository;
   }
 
-   async execute(input: DeclineRequestInput): Promise<FriendRequest[]> {
-    const result = await this.friendRepository.declineRequest(input.userId, input.requestId);
-
-    if (!Array.isArray(result)) {
-      throw new Error("declineRequest did not return a FriendRequest[]");
-    }
-    return result;
+   async execute(input: DeclineRequestInput): Promise<void> {
+    await this.friendRepository.declineRequest(input.userId, input.requestId);
   }
 }
 
