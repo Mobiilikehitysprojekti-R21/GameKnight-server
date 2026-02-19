@@ -37,6 +37,12 @@ abstract class SessionRepository {
     location_id?: number | null;
     notes?: string;
     guest_players?: Array<{ name: string }>;
+    players?: Array<{
+      user_id?: number | null;
+      guest_name?: string | null;
+      score?: number | null;
+      is_winner?: boolean | null;
+    }>;
   }): Promise<Session | undefined>;
   abstract updateSession(session: Session): Promise<void>;
 }

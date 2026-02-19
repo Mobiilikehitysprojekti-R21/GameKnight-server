@@ -10,6 +10,15 @@ export const createSessionController = (createSession: CreateSession, userReposi
       const game_id = req.body.game_id ?? req.body.boardGameId ?? req.body.gameId;
       const played_at_raw = req.body.played_at ?? req.body.playedAt;
       const guest_players = req.body.guest_players ?? req.body.guestPlayers;
+      const rawPlayers = req.body.players ?? req.body.session_players ?? req.body.sessionPlayers;
+      const players = Array.isArray(rawPlayers)
+        ? rawPlayers.map((p: any) => ({
+          user_id: p.user_id ?? p.userId ?? null,
+          guest_name: p.guest_name ?? p.guestName ?? null,
+          score: p.score ?? null,
+          is_winner: p.is_winner ?? p.isWinner ?? null,
+        }))
+        : undefined;
 
       // Validate required fields
       if (!game_id) {
@@ -47,6 +56,7 @@ export const createSessionController = (createSession: CreateSession, userReposi
         location: req.body.location,
         notes: req.body.notes,
         guest_players,
+        players,
         user_id: user.user_id
       });
 

@@ -1,6 +1,5 @@
-import Session from "../../domain/Session";
 import Location from "../../domain/Location";
-import SessionRepository from "../../ports/SessionRepository";
+import SessionRepository, { SessionDTO } from "../../ports/SessionRepository";
 import { LocationRepository } from "../../ports/LocationRepository";
 
 interface CreateSessionInput {
@@ -15,6 +14,12 @@ interface CreateSessionInput {
   guest_players?: Array<{
     name: string;
   }>;
+  players?: Array<{
+    user_id?: number | null;
+    guest_name?: string | null;
+    score?: number | null;
+    is_winner?: boolean | null;
+  }>;
 }
 
 export class CreateSession {
@@ -23,7 +28,7 @@ export class CreateSession {
     private readonly locationRepository: LocationRepository
   ) { }
 
-  async execute(input: CreateSessionInput): Promise<Session> {
+  async execute(input: CreateSessionInput): Promise<SessionDTO> {
     let locationId: number | undefined;
 
     if (input.location) {
@@ -40,14 +45,20 @@ export class CreateSession {
       played_at: input.played_at,
       location_id: locationId,
       notes: input.notes,
-      guest_players: input.guest_players
+      guest_players: input.guest_players,
+      players: input.players
     });
 
     if (!result) {
       throw new Error("Failed to create session");
     }
 
-    return result;
+    const created = await this.sessionRepository.getSessionById(result.session_id);
+    if (!created) {
+      throw new Error("Failed to load created session");
+    }
+
+    return created;
   }
 }
 

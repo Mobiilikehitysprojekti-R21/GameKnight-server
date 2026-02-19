@@ -162,7 +162,8 @@ class PostgresSessionRepository extends SessionRepository {
     played_at,
     location_id,
     notes,
-    guest_players
+    guest_players,
+    players
   }: {
     user_id: number;
     group_id?: number | null;
@@ -171,6 +172,12 @@ class PostgresSessionRepository extends SessionRepository {
     location_id?: number | null;
     notes?: string;
     guest_players?: Array<{ name: string }>;
+    players?: Array<{
+      user_id?: number | null;
+      guest_name?: string | null;
+      score?: number | null;
+      is_winner?: boolean | null;
+    }>;
   }): Promise<Session | undefined> {
     const result = await this.pool.query(
       `INSERT INTO sessions (group_id, game_id, played_at, location_id, notes)
@@ -190,21 +197,40 @@ class PostgresSessionRepository extends SessionRepository {
     const row = result.rows[0];
     const sessionId = row.session_id as number;
 
-    // Add creator as a session player
-    await this.pool.query(
-      `INSERT INTO session_players (session_id, user_id)
-       VALUES ($1, $2)`,
-      [sessionId, user_id]
-    );
+    if (players && players.length > 0) {
+      for (const player of players) {
+        const normalizedUserId = player.user_id == null ? null : Number(player.user_id);
+        const normalizedGuestName = player.guest_name ?? null;
+        const normalizedScore = player.score == null ? null : Number(player.score);
+        const normalizedWinner = Boolean(player.is_winner);
 
-    // Add guest players if provided
-    if (guest_players && guest_players.length > 0) {
-      for (const guest of guest_players) {
+        if (normalizedUserId == null && !normalizedGuestName) {
+          continue;
+        }
+
         await this.pool.query(
-          `INSERT INTO session_players (session_id, guest_name)
-           VALUES ($1, $2)`,
-          [sessionId, guest.name]
+          `INSERT INTO session_players (session_id, user_id, guest_name, score, is_winner)
+           VALUES ($1, $2, $3, $4, $5)`,
+          [sessionId, normalizedUserId, normalizedGuestName, normalizedScore, normalizedWinner]
         );
+      }
+    } else {
+      // Add creator as a session player
+      await this.pool.query(
+        `INSERT INTO session_players (session_id, user_id)
+         VALUES ($1, $2)`,
+        [sessionId, user_id]
+      );
+
+      // Add guest players if provided
+      if (guest_players && guest_players.length > 0) {
+        for (const guest of guest_players) {
+          await this.pool.query(
+            `INSERT INTO session_players (session_id, guest_name)
+             VALUES ($1, $2)`,
+            [sessionId, guest.name]
+          );
+        }
       }
     }
 
@@ -238,11 +264,11 @@ class PostgresSessionRepository extends SessionRepository {
   }
 
   async addLocationToSession(session_id: number, location_id: number): Promise<void> {
-  await this.pool.query(
-    `UPDATE sessions SET location_id = $1 WHERE session_id = $2`,
-    [location_id, session_id]
-  );
-}
+    await this.pool.query(
+      `UPDATE sessions SET location_id = $1 WHERE session_id = $2`,
+      [location_id, session_id]
+    );
+  }
 }
 
 export default PostgresSessionRepository;

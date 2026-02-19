@@ -87,7 +87,7 @@ CREATE TABLE sessions (
 
 CREATE TABLE session_players (
   session_id INT NOT NULL REFERENCES sessions(session_id) ON DELETE CASCADE,
-  user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+  user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
   guest_name VARCHAR(255),
   score INT,
   is_winner BOOLEAN NOT NULL DEFAULT false,

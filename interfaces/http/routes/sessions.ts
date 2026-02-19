@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { requireAuth } from "../middleware/auth";
+import { requireAuth, optionalAuth } from "../middleware/auth";
 import { createSessionController } from "../controllers/createSessionController";
 import { addLocationToSessionController } from "../controllers/addLocationToSessionController";
 import getSessionsController from "../controllers/getSessionController";
@@ -30,7 +30,7 @@ export default function sessionsRoutes({
 }: SessionRoutesDeps): Router {
   const router = Router();
 
-  router.get("/", requireAuth, getSessionsController(getSessions));
+  router.get("/", optionalAuth, getSessionsController(getSessions));
   router.get("/user/:user_id", requireAuth, getSessionsByUserIdController(getSessionsByUserId));
   router.get("/:id", requireAuth, getSessionByIdController(getSessionById));
 
