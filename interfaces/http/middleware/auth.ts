@@ -32,3 +32,16 @@ export const optionalAuth = expressjwt({
   algorithms: ["RS256"],
   credentialsRequired: false,
 });
+
+// Error handling middleware to log auth failures
+export const authErrorHandler = (err: any, req: any, res: any, next: any) => {
+  if (err.name === "UnauthorizedError") {
+    console.error("❌ JWT Auth Error:", {
+      message: err.message,
+      code: err.code,
+      status: err.status,
+      path: req.path,
+    });
+  }
+  next(err);
+};

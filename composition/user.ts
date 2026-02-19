@@ -17,7 +17,7 @@ module.exports = function createUserUseCases() {
     validateNickname: new ValidateNickname(userRepo),
     updateNickname: new ChangeNickname(userRepo),
     deleteUser: new DeleteUser(userRepo),
-    addAvatarUrl: new AddAvatar(userRepo),
+    addAvatar: new AddAvatar(userRepo),
     fetchUserNickname: new FetchUserNickname(userRepo)
   };
 };

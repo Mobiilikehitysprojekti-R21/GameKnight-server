@@ -1,5 +1,3 @@
-import { randomUUID } from 'crypto' // testauksen vuoksi, voi poistaa kun Auth0 käytössä
-
 export interface UserProps {
   user_id?: number | null;
   auth0_id: string;
