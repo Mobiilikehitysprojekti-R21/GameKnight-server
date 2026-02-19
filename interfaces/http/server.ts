@@ -29,6 +29,8 @@ import FetchUserNickname from "../../application/user/FetchUserNickname";
 import GetSessionById from "../../application/session/GetSessionById";
 import GetSessionsByUserId from "../../application/session/GetSessionsByUserId";
 import AddAvatar from "../../application/user/AddAvatar";
+import GetFavoriteLocations from "../../application/user/GetFavoriteLocations";
+import AddFavoriteLocation from "../../application/user/AddFavoriteLocation";
 import { authErrorHandler } from "./middleware/auth";
 
 export interface HttpServerDeps {
@@ -55,6 +57,8 @@ export interface HttpServerDeps {
   createSession: CreateSession;
   fetchUserNickname: FetchUserNickname
   addAvatar: AddAvatar
+  getFavoriteLocations: GetFavoriteLocations
+  addFavoriteLocation: AddFavoriteLocation
 }
 
 export default function createHttpServer(deps: HttpServerDeps): Express {

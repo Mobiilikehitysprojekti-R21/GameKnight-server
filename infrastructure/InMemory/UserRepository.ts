@@ -55,17 +55,18 @@ class InMemoryUserRepository extends UserRepository {
 
   async addFavoriteLocation(
     user_id: number,
-    location: { name: string; latitude: number; longitude: number }
-  ): Promise<void> {
+    location: { name?: string; latitude: number; longitude: number }
+  ): Promise<Location> {
     const existing = this.favoriteLocations.get(user_id) ?? [];
 
-    const alreadyExists = existing.some(
+    const alreadyExists = existing.find(
       (l) =>
         l.latitude === location.latitude &&
-        l.longitude === location.longitude
+        l.longitude === location.longitude &&
+        (l.name ?? "") === (location.name ?? "")
     );
 
-    if (alreadyExists) return;
+    if (alreadyExists) return alreadyExists;
 
     const newLocation = new Location({
       location_id: existing.length + 1,
@@ -75,6 +76,7 @@ class InMemoryUserRepository extends UserRepository {
     });
 
     this.favoriteLocations.set(user_id, [...existing, newLocation]);
+    return newLocation;
   }
 
   async deleteUser(auth0_id: string): Promise<void> {
