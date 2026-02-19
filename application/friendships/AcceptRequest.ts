@@ -13,13 +13,8 @@ class AcceptRequest {
     this.friendRepository = friendRepository;
   }
 
-   async execute(input: AcceptRequestInput): Promise<FriendRequest[]> {
-    const result = await this.friendRepository.acceptRequest(input.userId, input.requestId);
-
-    if (!Array.isArray(result)) {
-      throw new Error("acceptRequest did not return a FriendRequest[]");
-    }
-    return result;
+   async execute(input: AcceptRequestInput): Promise<void> {
+    await this.friendRepository.acceptRequest(input.userId, input.requestId);
   }
 }
 
