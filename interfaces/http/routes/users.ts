@@ -6,6 +6,8 @@ import CreateUser from "../../../application/user/CreateUser";
 import ValidateNickname from "../../../application/user/ValidateNickname";
 import FetchUserNickname from "../../../application/user/FetchUserNickname";
 import AddAvatar from "../../../application/user/AddAvatar";
+import GetFavoriteLocations from "../../../application/user/GetFavoriteLocations";
+import AddFavoriteLocation from "../../../application/user/AddFavoriteLocation";
 import { requireAuth } from "../middleware/auth";
 import ChangeNickname from "../../../application/user/ChangeNickname";
 import DeleteUser from "../../../application/user/DeleteUser";
@@ -13,6 +15,8 @@ import deleteUserController from "../controllers/deleteUserController";
 import fetchUserNicknameController from "../controllers/fetchUserNicknameController";
 import addAvatarController from "../controllers/addAvatarController";
 import { uploadAvatar } from "../middleware/uploadAvatar";
+import getFavoriteLocationsController from "../controllers/getFavoriteLocationsController";
+import addFavoriteLocationController from "../controllers/addFavoriteLocationController";
 
 export interface UserRoutesDeps {
   createUser: CreateUser;
@@ -21,9 +25,11 @@ export interface UserRoutesDeps {
   deleteUser: DeleteUser
   fetchUserNickname: FetchUserNickname
   addAvatar: AddAvatar
+  getFavoriteLocations: GetFavoriteLocations
+  addFavoriteLocation: AddFavoriteLocation
 }
 
-export default function userRoutes({ createUser, validateNickname, updateNickname, deleteUser, fetchUserNickname, addAvatar }: UserRoutesDeps): Router {
+export default function userRoutes({ createUser, validateNickname, updateNickname, deleteUser, fetchUserNickname, addAvatar, getFavoriteLocations, addFavoriteLocation }: UserRoutesDeps): Router {
   const router = Router();
 
   // Protected routes - require valid JWT token
@@ -33,5 +39,7 @@ export default function userRoutes({ createUser, validateNickname, updateNicknam
   router.patch("/updateNickname", requireAuth, updateNicknameController(updateNickname))
   router.post("/fetchUserNickname", requireAuth, fetchUserNicknameController(fetchUserNickname))
   router.delete("/:auth0_id", requireAuth, deleteUserController(deleteUser))
+  router.get("/:userId/favorite-locations", requireAuth, getFavoriteLocationsController(getFavoriteLocations))
+  router.post("/:userId/favorite-locations", requireAuth, addFavoriteLocationController(addFavoriteLocation))
   return router;
 }

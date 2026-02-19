@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS
   group_members,
   groups,
   locations,
+  user_favorite_locations,
   userBoardgames,
   boardgames,
   users
@@ -64,7 +65,15 @@ CREATE TABLE locations (
   location_id SERIAL PRIMARY KEY,
   name VARCHAR(255),
   latitude DOUBLE PRECISION NOT NULL,
-  longitude DOUBLE PRECISION NOT NULL
+  longitude DOUBLE PRECISION NOT NULL,
+  UNIQUE (latitude, longitude)
+);
+
+CREATE TABLE user_favorite_locations (
+  user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  location_id INT NOT NULL REFERENCES locations(location_id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  PRIMARY KEY (user_id, location_id)
 );
 
 CREATE TABLE sessions (

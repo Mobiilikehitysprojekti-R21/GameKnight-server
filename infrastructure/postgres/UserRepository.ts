@@ -1,5 +1,6 @@
 import UserRepository from "../../ports/UserRepository";
 import User from "../../domain/User";
+import Location from "../../domain/Location";
 import { Pool } from "pg";
 
 class PostgresUserRepository extends UserRepository {
@@ -179,6 +180,52 @@ class PostgresUserRepository extends UserRepository {
       throw new Error("Failed to delete user");
     }
     
+  }
+
+  async getFavoriteLocations(user_id: number): Promise<Location[]> {
+    const result = await this.pool.query(
+      `SELECT l.location_id, l.name, l.latitude, l.longitude
+       FROM user_favorite_locations ufl
+       JOIN locations l ON l.location_id = ufl.location_id
+       WHERE ufl.user_id = $1
+       ORDER BY ufl.created_at DESC`,
+      [user_id]
+    );
+
+    return result.rows.map((row) => new Location(row));
+  }
+
+  async addFavoriteLocation(
+    user_id: number,
+    location: { name?: string; latitude: number; longitude: number }
+  ): Promise<Location> {
+    // Round to 6 decimal places (~0.1m precision) to avoid floating point duplicates
+    const lat = Math.round(location.latitude * 1000000) / 1000000;
+    const lng = Math.round(location.longitude * 1000000) / 1000000;
+
+    // Generate default name if not provided
+    const locationName = location.name ?? `Favorite Location (${lat.toFixed(2)}, ${lng.toFixed(2)})`;
+
+    // UPSERT location - create if doesn't exist, otherwise do nothing
+    const locationResult = await this.pool.query(
+      `INSERT INTO locations (name, latitude, longitude)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (latitude, longitude) DO UPDATE SET name = COALESCE(NULLIF($1, NULL), locations.name)
+       RETURNING location_id, name, latitude, longitude`,
+      [locationName, lat, lng]
+    );
+
+    const locationId = locationResult.rows[0].location_id as number;
+
+    // Add to user's favorites (if not already there)
+    await this.pool.query(
+      `INSERT INTO user_favorite_locations (user_id, location_id)
+       VALUES ($1, $2)
+       ON CONFLICT (user_id, location_id) DO NOTHING`,
+      [user_id, locationId]
+    );
+
+    return new Location(locationResult.rows[0]);
   }
 
 }

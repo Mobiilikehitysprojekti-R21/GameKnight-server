@@ -34,6 +34,10 @@ INSERT INTO boardgames (
 INSERT INTO locations (name, latitude, longitude) VALUES
   ('Allin koti', 65.0121, 25.4651);
 
+-- USER FAVORITE LOCATIONS
+INSERT INTO user_favorite_locations (user_id, location_id) VALUES
+  (1, 1);
+
 -- SESSION
 INSERT INTO sessions (
   group_id, game_id, played_at, location_id, notes
