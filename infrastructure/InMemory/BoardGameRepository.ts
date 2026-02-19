@@ -110,6 +110,10 @@ class InMemoryBoardGameRepository extends BoardGameRepository {
     );
   }
 
+  async getById(gameId: number): Promise<BoardGame | undefined> {
+    return this.boardGames.find((game) => game.game_id === gameId);
+  }
+
   async addBoardGameToUser(userId: string, game: BoardGame["bgg_id"]): Promise<BoardGame["bgg_id"]> {
     const existing = this.userCollections.get(userId) ?? new Set<number>();
     existing.add(Number(game));

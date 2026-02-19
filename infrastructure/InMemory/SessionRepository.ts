@@ -33,9 +33,30 @@ class InMemorySessionRepository extends SessionRepository {
     return s ? toDTO(s) : undefined;
   }
 
-  // In-memory repo does not currently model session_players; return empty for now.
+  // In-memory repo does not model session_players; return empty for now.
   async getSessionsByUserId(_userId: number): Promise<SessionDTO[]> {
     return [];
+  }
+
+  async createSessions(input: {
+    user_id: number;
+    group_id?: number | null;
+    game_id: number;
+    played_at: Date;
+    location_id?: number | null;
+    notes?: string;
+    guest_players?: Array<{ name: string }>;
+  }): Promise<Session | undefined> {
+    const session = new Session({
+      session_id: Date.now(), // Use timestamp as ID in memory
+      group_id: input.group_id ?? undefined,
+      game_id: input.game_id,
+      played_at: input.played_at,
+      location_id: input.location_id ?? undefined,
+      notes: input.notes ?? undefined
+    });
+    this.sessions.push(session);
+    return session;
   }
 
   async updateSession(session: Session): Promise<void> {

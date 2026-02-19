@@ -22,6 +22,7 @@ module.exports = function createUserUseCases() {
     addAvatar: new AddAvatar(userRepo),
     fetchUserNickname: new FetchUserNickname(userRepo),
     getFavoriteLocations: new GetFavoriteLocations(userRepo),
-    addFavoriteLocation: new AddFavoriteLocation(userRepo)
+    addFavoriteLocation: new AddFavoriteLocation(userRepo),
+    userRepository: userRepo
   };
 };

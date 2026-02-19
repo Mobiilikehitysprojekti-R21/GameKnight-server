@@ -5,6 +5,7 @@ import userRoutes from "./routes/users";
 import CreateUser from "../../application/user/CreateUser";
 import DeleteUser from "../../application/user/DeleteUser";
 import FindBoardGame from "../../application/boardgame/FindBoardGame";
+import GetBoardGame from "../../application/boardgame/GetBoardGame";
 import boardGameRouter from "./routes/boardgames";
 import friendshipsRouter from "./routes/friendships";
 import ValidateNickname from "../../application/user/ValidateNickname";
@@ -38,6 +39,7 @@ export interface HttpServerDeps {
   validateNickname: ValidateNickname;
   updateNickname: ChangeNickname;
   findBoardGame: FindBoardGame;
+  getBoardGame: GetBoardGame;
   declineRequest: DeclineRequest;
   getFriends: GetFriends;
   getFriendRequests: GetFriendRequests;
@@ -59,6 +61,7 @@ export interface HttpServerDeps {
   addAvatar: AddAvatar
   getFavoriteLocations: GetFavoriteLocations
   addFavoriteLocation: AddFavoriteLocation
+  userRepository: any
 }
 
 export default function createHttpServer(deps: HttpServerDeps): Express {
@@ -77,7 +80,7 @@ export default function createHttpServer(deps: HttpServerDeps): Express {
     res.send("GameKnight API");
   });
   app.use("/friendships", friendshipsRouter(deps))
-  app.use("/sessions", sessionsRouter(deps));
+  app.use("/gamesessions", sessionsRouter(deps));
   app.use("/sessionPlayers", sessionPlayerRouter(deps));
 
   return app;

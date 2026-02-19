@@ -13,7 +13,8 @@ function normalizePlayers(players: SessionPlayerDTO[] | null | unknown): Session
   return players
     .filter((p) => p && typeof p === "object")
     .map((p: any) => ({
-      user_id: Number(p.user_id),
+      user_id: p.user_id == null ? null : Number(p.user_id),
+      guest_name: p.guest_name || null,
       score: p.score == null ? null : Number(p.score),
       is_winner: Boolean(p.is_winner),
     }))
@@ -69,11 +70,12 @@ class PostgresSessionRepository extends SessionRepository {
               json_agg(
                 json_build_object(
                     'user_id', sp.user_id,
+                    'guest_name', sp.guest_name,
                     'score', sp.score,
                     'is_winner', sp.is_winner
                 )
-                ORDER BY sp.user_id
-              ) FILTER (WHERE sp.user_id IS NOT NULL),
+                ORDER BY sp.user_id NULLS LAST
+              ) FILTER (WHERE sp.user_id IS NOT NULL OR sp.guest_name IS NOT NULL),
               '[]'::json
             ) as players
         FROM sessions s
@@ -97,11 +99,12 @@ class PostgresSessionRepository extends SessionRepository {
             json_agg(
               json_build_object(
                   'user_id', sp.user_id,
+                  'guest_name', sp.guest_name,
                   'score', sp.score,
                   'is_winner', sp.is_winner
               )
-              ORDER BY sp.user_id
-            ) FILTER (WHERE sp.user_id IS NOT NULL),
+              ORDER BY sp.user_id NULLS LAST
+            ) FILTER (WHERE sp.user_id IS NOT NULL OR sp.guest_name IS NOT NULL),
             '[]'::json
           ) as players
         FROM sessions s
@@ -127,11 +130,12 @@ class PostgresSessionRepository extends SessionRepository {
             json_agg(
               json_build_object(
                   'user_id', sp.user_id,
+                  'guest_name', sp.guest_name,
                   'score', sp.score,
                   'is_winner', sp.is_winner
               )
-              ORDER BY sp.user_id
-            ) FILTER (WHERE sp.user_id IS NOT NULL),
+              ORDER BY sp.user_id NULLS LAST
+            ) FILTER (WHERE sp.user_id IS NOT NULL OR sp.guest_name IS NOT NULL),
             '[]'::json
           ) as players
         FROM sessions s
@@ -141,7 +145,7 @@ class PostgresSessionRepository extends SessionRepository {
           SELECT 1
           FROM session_players sp2
           WHERE sp2.session_id = s.session_id
-            AND sp2.user_id = $1
+            AND (sp2.user_id = $1 OR sp2.guest_name IS NOT NULL)
         )
         GROUP BY s.session_id, b.bgg_id, b.name, b.thumbnail_url
         ORDER BY s.played_at DESC`,
@@ -152,30 +156,28 @@ class PostgresSessionRepository extends SessionRepository {
   }
 
   async createSessions({
-    session_id,
-    group_id,
     user_id,
+    group_id,
     game_id,
     played_at,
     location_id,
-    notes
+    notes,
+    guest_players
   }: {
-    session_id: number;
+    user_id: number;
     group_id?: number | null;
-    user_id?: number | null;
     game_id: number;
     played_at: Date;
     location_id?: number | null;
     notes?: string;
+    guest_players?: Array<{ name: string }>;
   }): Promise<Session | undefined> {
     const result = await this.pool.query(
-      `INSERT INTO sessions (session_id, group_id, user_id, game_id, played_at, location_id, notes)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-       RETURNING *`,
+      `INSERT INTO sessions (group_id, game_id, played_at, location_id, notes)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING session_id, group_id, game_id, played_at, location_id, notes`,
       [
-        session_id,
         group_id ?? null,
-        user_id ?? null,
         game_id,
         played_at,
         location_id ?? null,
@@ -186,8 +188,28 @@ class PostgresSessionRepository extends SessionRepository {
     if (result.rowCount === 0) return undefined;
 
     const row = result.rows[0];
+    const sessionId = row.session_id as number;
+
+    // Add creator as a session player
+    await this.pool.query(
+      `INSERT INTO session_players (session_id, user_id)
+       VALUES ($1, $2)`,
+      [sessionId, user_id]
+    );
+
+    // Add guest players if provided
+    if (guest_players && guest_players.length > 0) {
+      for (const guest of guest_players) {
+        await this.pool.query(
+          `INSERT INTO session_players (session_id, guest_name)
+           VALUES ($1, $2)`,
+          [sessionId, guest.name]
+        );
+      }
+    }
+
     return new Session({
-      session_id: row.session_id,
+      session_id: sessionId,
       group_id: row.group_id,
       game_id: row.game_id,
       played_at: row.played_at,
