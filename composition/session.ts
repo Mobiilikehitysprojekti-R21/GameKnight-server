@@ -2,33 +2,24 @@ import { CreateSession } from "../application/session/CreateSession";
 import { AddLocationToSession } from "../application/session/AddLocationToSession";
 import PostgresLocationRepository from "../infrastructure/postgres/LocationRepository";
 import getSessions from "../application/session/GetGameSessions";
-import findByGroupID from "../application/session/findByGroupID";
-import InMemorySessionRepository from "../infrastructure/InMemory/SessionRepository";
 import PostgresSessionRepository from "../infrastructure/postgres/SessionRepository";
 import { pool } from "../infrastructure/postgres/db";
 import UpdateSession from "../application/session/updateSession";
-
-const sessionRepository = new InMemorySessionRepository();
-const locationRepository = new PostgresLocationRepository(pool);
-
-export const sessionComposition = {
-  createSession: new CreateSession(sessionRepository, locationRepository),
-  addLocationToSession: new AddLocationToSession(
-    sessionRepository,
-    locationRepository
-  )
-};
+import GetSessionById from "../application/session/GetSessionById";
+import GetSessionsByUserId from "../application/session/GetSessionsByUserId";
 
 const createSessionUseCases = function () {
-   const sessionRepo = new PostgresSessionRepository(pool);
+  const sessionRepo = new PostgresSessionRepository(pool);
+  const locationRepository = new PostgresLocationRepository(pool);
 
   return {
-    findByGroupID: new findByGroupID(sessionRepo),
     getSessions: new getSessions(sessionRepo),
-    UpdateSession: new UpdateSession(sessionRepo),
-    CreateSession: new CreateSession(sessionRepo, locationRepository),
-    AddLocationToSession: new AddLocationToSession(sessionRepo, locationRepository),
+    getSessionById: new GetSessionById(sessionRepo),
+    getSessionsByUserId: new GetSessionsByUserId(sessionRepo),
+    updateSession: new UpdateSession(sessionRepo),
+    createSession: new CreateSession(sessionRepo, locationRepository),
+    addLocationToSession: new AddLocationToSession(sessionRepo, locationRepository),
   };
-}; 
+};
 
 export default createSessionUseCases;

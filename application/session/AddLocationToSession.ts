@@ -1,6 +1,7 @@
 import SessionRepository from "../../ports/SessionRepository";
 import { LocationRepository } from "../../ports/LocationRepository";
 import Location from "../../domain/Location";
+import Session from "../../domain/Session";
 
 interface Input {
   sessionId: number;
@@ -14,8 +15,7 @@ export class AddLocationToSession {
   ) {}
 
   async execute({ sessionId, name}: Input): Promise<void> {
-    const sessions = await this.sessionRepository.getSessions();
-    const session = sessions.find(s => s.session_id === sessionId);
+    const session = await this.sessionRepository.getSessionById(sessionId);
 
     if (!session) {
       throw new Error("Session not found");
@@ -25,9 +25,16 @@ export class AddLocationToSession {
       new Location({ name, location_id: 0, latitude: 0, longitude: 0 })
     );
 
-    const updatedSession = { ...session, location_id: location.location_id };
-
-    await this.sessionRepository.updateSession(updatedSession);
+    await this.sessionRepository.updateSession(
+      new Session({
+        session_id: session.session_id,
+        group_id: session.group_id,
+        game_id: session.game_id,
+        played_at: session.played_at,
+        location_id: location.location_id,
+        notes: session.notes ?? undefined,
+      })
+    );
   }
 }
 

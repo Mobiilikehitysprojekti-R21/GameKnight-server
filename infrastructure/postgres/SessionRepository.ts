@@ -1,13 +1,45 @@
-import SessionRepository from "../../ports/SessionRepository";
+import SessionRepository, { SessionDTO, SessionPlayerDTO } from "../../ports/SessionRepository";
 import Session from "../../domain/Session";
 import { Pool } from "pg";
+
+type SessionRow = Omit<SessionDTO, "players"> & {
+  players: SessionPlayerDTO[] | null;
+};
+
+function normalizePlayers(players: SessionPlayerDTO[] | null | unknown): SessionPlayerDTO[] {
+  if (!players) return [];
+  if (!Array.isArray(players)) return [];
+
+  return players
+    .filter((p) => p && typeof p === "object")
+    .map((p: any) => ({
+      user_id: Number(p.user_id),
+      score: p.score == null ? null : Number(p.score),
+      is_winner: Boolean(p.is_winner),
+    }))
+}
+
+function toSessionDTO(row: SessionRow): SessionDTO {
+  return {
+    session_id: row.session_id,
+    group_id: row.group_id,
+    game_id: row.game_id,
+    played_at: row.played_at,
+    location_id: row.location_id,
+    notes: row.notes,
+    bgg_id: row.bgg_id,
+    game_name: row.game_name,
+    thumbnail_url: row.thumbnail_url,
+    players: normalizePlayers(row.players),
+  };
+}
 
 class PostgresSessionRepository extends SessionRepository {
   private readonly pool: Pool;
 
   constructor(pool: Pool) {
-    super()
-    this.pool = pool
+    super();
+    this.pool = pool;
   }
 
   async findByGroupID(groupID: number): Promise<Session[]> {
@@ -26,24 +58,98 @@ class PostgresSessionRepository extends SessionRepository {
     }));
   }
 
-  async getSessions(): Promise<any[]> {
-    const result = await this.pool.query(`
+  async getSessions(): Promise<SessionDTO[]> {
+    const result = await this.pool.query<SessionRow>(`
         SELECT 
             s.session_id, s.group_id, s.game_id, s.played_at, s.location_id, s.notes,
-            json_agg(
+            b.bgg_id,
+            b.name as game_name,
+            b.thumbnail_url,
+            COALESCE(
+              json_agg(
                 json_build_object(
                     'user_id', sp.user_id,
                     'score', sp.score,
                     'is_winner', sp.is_winner
                 )
+                ORDER BY sp.user_id
+              ) FILTER (WHERE sp.user_id IS NOT NULL),
+              '[]'::json
             ) as players
         FROM sessions s
+        JOIN boardgames b ON b.game_id = s.game_id
         LEFT JOIN session_players sp ON s.session_id = sp.session_id
-        GROUP BY s.session_id
+        GROUP BY s.session_id, b.bgg_id, b.name, b.thumbnail_url
+        ORDER BY s.played_at DESC
     `);
-    
-    return result.rows;
-}
+
+    return result.rows.map(toSessionDTO);
+  }
+
+  async getSessionById(sessionId: number): Promise<SessionDTO | undefined> {
+    const result = await this.pool.query<SessionRow>(
+      `SELECT 
+          s.session_id, s.group_id, s.game_id, s.played_at, s.location_id, s.notes,
+          b.bgg_id,
+          b.name as game_name,
+          b.thumbnail_url,
+          COALESCE(
+            json_agg(
+              json_build_object(
+                  'user_id', sp.user_id,
+                  'score', sp.score,
+                  'is_winner', sp.is_winner
+              )
+              ORDER BY sp.user_id
+            ) FILTER (WHERE sp.user_id IS NOT NULL),
+            '[]'::json
+          ) as players
+        FROM sessions s
+        JOIN boardgames b ON b.game_id = s.game_id
+        LEFT JOIN session_players sp ON s.session_id = sp.session_id
+        WHERE s.session_id = $1
+        GROUP BY s.session_id, b.bgg_id, b.name, b.thumbnail_url`,
+      [sessionId]
+    );
+
+    if (result.rowCount === 0) return undefined;
+    return toSessionDTO(result.rows[0]);
+  }
+
+  async getSessionsByUserId(userId: number): Promise<SessionDTO[]> {
+    const result = await this.pool.query<SessionRow>(
+      `SELECT 
+          s.session_id, s.group_id, s.game_id, s.played_at, s.location_id, s.notes,
+          b.bgg_id,
+          b.name as game_name,
+          b.thumbnail_url,
+          COALESCE(
+            json_agg(
+              json_build_object(
+                  'user_id', sp.user_id,
+                  'score', sp.score,
+                  'is_winner', sp.is_winner
+              )
+              ORDER BY sp.user_id
+            ) FILTER (WHERE sp.user_id IS NOT NULL),
+            '[]'::json
+          ) as players
+        FROM sessions s
+        JOIN boardgames b ON b.game_id = s.game_id
+        LEFT JOIN session_players sp ON s.session_id = sp.session_id
+        WHERE EXISTS (
+          SELECT 1
+          FROM session_players sp2
+          WHERE sp2.session_id = s.session_id
+            AND sp2.user_id = $1
+        )
+        GROUP BY s.session_id, b.bgg_id, b.name, b.thumbnail_url
+        ORDER BY s.played_at DESC`,
+      [userId]
+    );
+
+    return result.rows.map(toSessionDTO);
+  }
 
   async createSessions({
     session_id,

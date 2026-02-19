@@ -26,6 +26,8 @@ import UpdateSession from "../../application/session/updateSession";
 import AddLocationToSession from "../../application/session/AddLocationToSession";
 import CreateSession from "../../application/session/CreateSession";
 import FetchUserNickname from "../../application/user/FetchUserNickname";
+import GetSessionById from "../../application/session/GetSessionById";
+import GetSessionsByUserId from "../../application/session/GetSessionsByUserId";
 import AddAvatar from "../../application/user/AddAvatar";
 import { authErrorHandler } from "./middleware/auth";
 
@@ -43,6 +45,8 @@ export interface HttpServerDeps {
   addGameToUser: AddBoardGameToUser;
   getUserGameCollection: GetUserGameCollection;
   getSessions: getSessions;
+  getSessionById: GetSessionById;
+  getSessionsByUserId: GetSessionsByUserId;
   saveSessionPlayer: sessionPlayers;
   deleteUser: DeleteUser;
   deleteBoardGame: DeleteBoardGame;
