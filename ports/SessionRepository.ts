@@ -2,6 +2,7 @@ import Session from "../domain/Session";
 
 export interface SessionPlayerDTO {
   user_id: number | null;
+  name?: string | null;
   guest_name: string | null;
   score: number | null;
   is_winner: boolean;
@@ -13,6 +14,7 @@ export interface SessionDTO {
   game_id: number;
   played_at: Date;
   location_id: number | null;
+  location_name?: string | null;
   notes: string | null;
   bgg_id: number;
   game_name: string;

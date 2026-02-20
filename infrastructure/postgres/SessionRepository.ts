@@ -4,6 +4,7 @@ import { Pool } from "pg";
 
 type SessionRow = Omit<SessionDTO, "players"> & {
   players: SessionPlayerDTO[] | null;
+  location_name?: string | null;
 };
 
 function normalizePlayers(players: SessionPlayerDTO[] | null | unknown): SessionPlayerDTO[] {
@@ -14,6 +15,7 @@ function normalizePlayers(players: SessionPlayerDTO[] | null | unknown): Session
     .filter((p) => p && typeof p === "object")
     .map((p: any) => ({
       user_id: p.user_id == null ? null : Number(p.user_id),
+      name: p.name || null,
       guest_name: p.guest_name || null,
       score: p.score == null ? null : Number(p.score),
       is_winner: Boolean(p.is_winner),
@@ -27,6 +29,7 @@ function toSessionDTO(row: SessionRow): SessionDTO {
     game_id: row.game_id,
     played_at: row.played_at,
     location_id: row.location_id,
+    location_name: row.location_name || null,
     notes: row.notes,
     bgg_id: row.bgg_id,
     game_name: row.game_name,
@@ -63,6 +66,7 @@ class PostgresSessionRepository extends SessionRepository {
     const result = await this.pool.query<SessionRow>(`
         SELECT 
             s.session_id, s.group_id, s.game_id, s.played_at, s.location_id, s.notes,
+            l.name as location_name,
             b.bgg_id,
             b.name as game_name,
             b.thumbnail_url,
@@ -70,6 +74,7 @@ class PostgresSessionRepository extends SessionRepository {
               json_agg(
                 json_build_object(
                     'user_id', sp.user_id,
+                    'name', u.nickname,
                     'guest_name', sp.guest_name,
                     'score', sp.score,
                     'is_winner', sp.is_winner
@@ -81,7 +86,9 @@ class PostgresSessionRepository extends SessionRepository {
         FROM sessions s
         JOIN boardgames b ON b.game_id = s.game_id
         LEFT JOIN session_players sp ON s.session_id = sp.session_id
-        GROUP BY s.session_id, b.bgg_id, b.name, b.thumbnail_url
+        LEFT JOIN users u ON sp.user_id = u.user_id
+        LEFT JOIN locations l ON s.location_id = l.location_id
+        GROUP BY s.session_id, b.bgg_id, b.name, b.thumbnail_url, l.name
         ORDER BY s.played_at DESC
     `);
 
@@ -92,6 +99,7 @@ class PostgresSessionRepository extends SessionRepository {
     const result = await this.pool.query<SessionRow>(
       `SELECT 
           s.session_id, s.group_id, s.game_id, s.played_at, s.location_id, s.notes,
+          l.name as location_name,
           b.bgg_id,
           b.name as game_name,
           b.thumbnail_url,
@@ -99,6 +107,7 @@ class PostgresSessionRepository extends SessionRepository {
             json_agg(
               json_build_object(
                   'user_id', sp.user_id,
+                  'name', u.nickname,
                   'guest_name', sp.guest_name,
                   'score', sp.score,
                   'is_winner', sp.is_winner
@@ -110,8 +119,10 @@ class PostgresSessionRepository extends SessionRepository {
         FROM sessions s
         JOIN boardgames b ON b.game_id = s.game_id
         LEFT JOIN session_players sp ON s.session_id = sp.session_id
+        LEFT JOIN users u ON sp.user_id = u.user_id
+        LEFT JOIN locations l ON s.location_id = l.location_id
         WHERE s.session_id = $1
-        GROUP BY s.session_id, b.bgg_id, b.name, b.thumbnail_url`,
+        GROUP BY s.session_id, b.bgg_id, b.name, b.thumbnail_url, l.name`,
       [sessionId]
     );
 
@@ -123,6 +134,7 @@ class PostgresSessionRepository extends SessionRepository {
     const result = await this.pool.query<SessionRow>(
       `SELECT 
           s.session_id, s.group_id, s.game_id, s.played_at, s.location_id, s.notes,
+          l.name as location_name,
           b.bgg_id,
           b.name as game_name,
           b.thumbnail_url,
@@ -130,6 +142,7 @@ class PostgresSessionRepository extends SessionRepository {
             json_agg(
               json_build_object(
                   'user_id', sp.user_id,
+                  'name', u.nickname,
                   'guest_name', sp.guest_name,
                   'score', sp.score,
                   'is_winner', sp.is_winner
@@ -141,13 +154,15 @@ class PostgresSessionRepository extends SessionRepository {
         FROM sessions s
         JOIN boardgames b ON b.game_id = s.game_id
         LEFT JOIN session_players sp ON s.session_id = sp.session_id
+        LEFT JOIN users u ON sp.user_id = u.user_id
+        LEFT JOIN locations l ON s.location_id = l.location_id
         WHERE EXISTS (
           SELECT 1
           FROM session_players sp2
           WHERE sp2.session_id = s.session_id
             AND (sp2.user_id = $1 OR sp2.guest_name IS NOT NULL)
         )
-        GROUP BY s.session_id, b.bgg_id, b.name, b.thumbnail_url
+        GROUP BY s.session_id, b.bgg_id, b.name, b.thumbnail_url, l.name
         ORDER BY s.played_at DESC`,
       [userId]
     );
