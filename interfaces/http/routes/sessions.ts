@@ -30,7 +30,7 @@ export default function sessionsRoutes({
 }: SessionRoutesDeps): Router {
   const router = Router();
 
-  router.get("/", optionalAuth, getSessionsController(getSessions));
+  router.get("/", optionalAuth, getSessionsController(getSessions, getSessionsByUserId, userRepository));
   router.get("/user/:user_id", requireAuth, getSessionsByUserIdController(getSessionsByUserId));
   router.get("/:id", requireAuth, getSessionByIdController(getSessionById));
 

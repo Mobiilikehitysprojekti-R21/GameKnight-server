@@ -7,6 +7,7 @@ interface CreateSessionInput {
   group_id?: number | null;
   game_id: number;
   played_at: Date;
+  location_id?: number | null;
   location?: {
     name: string;
   };
@@ -29,9 +30,9 @@ export class CreateSession {
   ) { }
 
   async execute(input: CreateSessionInput): Promise<SessionDTO> {
-    let locationId: number | undefined;
+    let locationId: number | undefined = input.location_id ?? undefined;
 
-    if (input.location) {
+    if (input.location && !locationId) {
       const location = await this.locationRepository.create(
         new Location({ name: input.location.name, location_id: 0, latitude: 0, longitude: 0 })
       );

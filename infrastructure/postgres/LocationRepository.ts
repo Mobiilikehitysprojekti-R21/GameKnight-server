@@ -13,6 +13,7 @@ class PostgresLocationRepository implements LocationRepository {
     const result = await this.pool.query(
       `INSERT INTO locations (name, latitude, longitude)
       VALUES ($1, $2, $3)
+      ON CONFLICT (latitude, longitude) DO UPDATE SET name = COALESCE($1, name)
       RETURNING location_id, name, latitude, longitude`,
       [location.name, location.latitude, location.longitude]
     );

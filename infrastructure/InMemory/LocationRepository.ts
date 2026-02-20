@@ -6,6 +6,22 @@ export class InMemoryLocationRepository implements LocationRepository {
   private nextId = 1;
 
   async create(location: Location): Promise<Location> {
+    // Check if location with same coordinates already exists (UPSERT behavior)
+    const existing = this.locations.find(
+      l => l.latitude === location.latitude && l.longitude === location.longitude
+    );
+
+    if (existing) {
+      // Update name if provided, otherwise keep existing
+      if (location.name) {
+        return new Location({
+          ...existing,
+          name: location.name,
+        });
+      }
+      return existing;
+    }
+
     const newLocation = new Location({
       ...location,
       location_id: this.nextId++,

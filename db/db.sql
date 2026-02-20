@@ -86,13 +86,17 @@ CREATE TABLE sessions (
 );
 
 CREATE TABLE session_players (
+  session_player_id SERIAL PRIMARY KEY,
   session_id INT NOT NULL REFERENCES sessions(session_id) ON DELETE CASCADE,
-  user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
   guest_name VARCHAR(255),
   score INT,
-  is_winner BOOLEAN NOT NULL DEFAULT false,
-  PRIMARY KEY (session_id, COALESCE(user_id, guest_name))
+  is_winner BOOLEAN NOT NULL DEFAULT false
 );
+
+CREATE UNIQUE INDEX idx_session_player_unique_user 
+  ON session_players(session_id, user_id) 
+  WHERE user_id IS NOT NULL;
 
 CREATE INDEX idx_sessions_group_played_at
   ON sessions (group_id, played_at DESC);
