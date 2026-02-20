@@ -9,6 +9,7 @@ export const createSessionController = (createSession: CreateSession, userReposi
       const group_id = req.body.group_id ?? req.body.groupId;
       const game_id = req.body.game_id ?? req.body.boardGameId ?? req.body.gameId;
       const played_at_raw = req.body.played_at ?? req.body.playedAt;
+      const location_id = req.body.location_id ?? req.body.locationId;
       const guest_players = req.body.guest_players ?? req.body.guestPlayers;
       const rawPlayers = req.body.players ?? req.body.session_players ?? req.body.sessionPlayers;
       const players = Array.isArray(rawPlayers)
@@ -53,6 +54,7 @@ export const createSessionController = (createSession: CreateSession, userReposi
         group_id,
         game_id,
         played_at: played_at_raw ? new Date(played_at_raw) : new Date(),
+        location_id,
         location: req.body.location,
         notes: req.body.notes,
         guest_players,

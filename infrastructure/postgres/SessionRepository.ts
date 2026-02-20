@@ -160,7 +160,7 @@ class PostgresSessionRepository extends SessionRepository {
           SELECT 1
           FROM session_players sp2
           WHERE sp2.session_id = s.session_id
-            AND (sp2.user_id = $1 OR sp2.guest_name IS NOT NULL)
+            AND sp2.user_id = $1
         )
         GROUP BY s.session_id, b.bgg_id, b.name, b.thumbnail_url, l.name
         ORDER BY s.played_at DESC`,
